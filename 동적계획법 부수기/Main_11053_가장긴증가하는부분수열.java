@@ -17,15 +17,16 @@ public class Main_11053_가장긴증가하는부분수열 {
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
 	
-		Arrays.sort(arr);
-		
 		for(int i=0; i<A; i++) {
 			DP(i);
 		}
-			
-		Arrays.sort(memo);
 		
-		System.out.print(memo[A-1]);
+		int max = memo[0];
+		for(int i=1; i<A; i++) {
+			max = Math.max(max,  memo[i]);
+		}
+		
+		System.out.print(max);
 	} // End of main
 
 	private static int DP(int N) {
