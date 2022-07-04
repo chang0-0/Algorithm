@@ -35,9 +35,7 @@ public class Main_1979_어디에_단어가들어갈수있을까 {
 					int num = Integer.parseInt(st.nextToken());
 					arr[i][j] = num;
 					
-					if(num == 1) {
-						rowCount++;
-					}
+					if(num == 1) rowCount++;
 					else{
 						if(rowCount == K) result++;
 						rowCount = 0;
@@ -61,9 +59,7 @@ public class Main_1979_어디에_단어가들어갈수있을까 {
 			for(int j=0; j<N; j++) {
 				int num = arr[j][i];
 				
-				if(num == 1) {
-					colCount ++;
-				}
+				if(num == 1) colCount ++;
 				else {
 					if(colCount == K) result++;
 					colCount = 0;

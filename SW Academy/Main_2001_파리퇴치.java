@@ -41,7 +41,6 @@ public class Main_2001_파리퇴치 {
 					max = Math.max(result, max);
 				}
 			}
-			
 			sb.append(max).append('\n');
 		}
 		
