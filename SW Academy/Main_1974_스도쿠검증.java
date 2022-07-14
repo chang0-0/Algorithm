@@ -3,18 +3,18 @@ import java.io.*;
 	
 // 완전한 스도쿠 일 경우 -> 1, 아닐 경우 -> 0
 public class Main_1974_스도쿠검증 {
-	static StringBuilder sb = new StringBuilder();
 	static int arr[][] = new int[9][9];
 	
 	public static void main(String[] args) throws Exception {
 		System.setIn(new FileInputStream("res/1974.txt"));
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		
 		int T = Integer.parseInt(br.readLine());
 		for(int t=1; t<=T; t++) {
-			sb.append("#").append(t).append(' ');
+			sb.append('#').append(t).append(' ');
 			
 			for(int i=0; i<9; i++) {
 				st = new StringTokenizer(br.readLine());
@@ -53,14 +53,11 @@ public class Main_1974_스도쿠검증 {
 			
 			for(int i=0; i<9; i+=3) {
 				for(int j=0; j<9; j+=3) {
-					int x = i;
-					int y = j;
+					int x = i; int y = j;
 					int sum = 0;
 					
 					for(int k=x; k<x+3; k++) {
-						for(int l=y; l<y+3; l++) {
-							sum += arr[k][l];
-						}
+						for(int l=y; l<y+3; l++) sum += arr[k][l];
 					}
 					
 					if(sum != 45) {
