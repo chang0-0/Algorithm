@@ -4,13 +4,14 @@ import java.io.*;
 public class Main_16236_아기상어 {
 	static int N;
 	static int startX; static int startY;
+	static int nowX, nowY;
 	static int sharkSize = 2;
+	static int eatCount = 0;
 	static int result = 0;
 	
 	static int dirX[] = {-1, 0, 0, 1}; // 상 하 좌 우  ( 상 -> 좌 -> 우 -> 하)
 	static int dirY[] = {0, -1, 1, 0};
 	static int arr[][];
-	static int nowX, nowY;
 	
 	static class Node implements Comparable<Node>{
 		int x;
@@ -24,8 +25,12 @@ public class Main_16236_아기상어 {
 		}
 
 		@Override
-		public int compareTo(Main_16236_아기상어.Node o) {
-			return dist - o.dist;
+		public int compareTo(Node o) {
+	        if(dist == o.dist) {
+	            if(x == o.x) return Integer.compare(y, o.y);
+	            return Integer.compare(x, o.x);
+	        }
+	        return Integer.compare(dist, o.dist);
 		}
 	} // End of Node
 	
@@ -38,27 +43,22 @@ public class Main_16236_아기상어 {
 		for(int i=0; i<N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			for(int j=0; j<N; j++) {
-				int num = Integer.parseInt(st.nextToken());
-				arr[i][j] = num;
-				
-				if(num == 9) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
+				if(arr[i][j] == 9) {
 					startX = i; 
 					startY = j;
+					arr[i][j] = 0;
 				}
 			}
 		}
 		
-		// 처음에는 1부터 2까지를 무조건 찾는다.
-		for(int i=1; i<=9; i++) {
-			if(sharkSize < i) break;
-			BFS(startX, startY, i);
-		}
-		
-		System.out.println(result);
+		BFS(startX, startY);
+		System.out.print(result);
 	} // End of main
 	
-	private static void BFS(int x, int y, int fishSize) {
+	private static void BFS(int x, int y) {
 		PriorityQueue<Node> que = new PriorityQueue<>();
+		
 		boolean visit[][] = new boolean[N][N];
 		que.offer(new Node(x, y, 0));
 		visit[x][y] = true;
@@ -70,28 +70,33 @@ public class Main_16236_아기상어 {
 				nowX = dirX[i] + node.x;
 				nowY = dirY[i] + node.y;
 				
-				//System.out.println("(" + nowX + ", " + nowY + node.dist + ")");
 				if(!range_check() || visit[nowX][nowY] ) continue;
+				visit[nowX][nowY] = true;
 				
-				// 먹을 수 있는 크기보다 크거나 0 일 경우,
-				if( arr[nowX][nowY] > fishSize || arr[nowX][nowY] == 0 ) {
+				if( arr[nowX][nowY] <= sharkSize ) {
 					que.offer(new Node(nowX, nowY, node.dist+1));
-					visit[nowX][nowY] = true;
-				}
-				else if(arr[nowX][nowY] <= fishSize) { // 먹이를 먹을 수 있을 때					
-					if(i == sharkSize) sharkSize++;
-					arr[nowX][nowY] = 0;
-					visit[nowX][nowY] = true;
-					
-					result += node.dist + 1;
-					startX = nowX;
-					startY = nowY;
-					
-					que.offer(new Node(nowX, nowY, node.dist + 1));
 				}
 			}	
+			
+			if(!que.isEmpty()) {
+				Node peekNode = que.peek();
+				
+				if(arr[peekNode.x][peekNode.y] < sharkSize && arr[peekNode.x][peekNode.y] > 0) {
+					eatCount++;
+					if(eatCount == sharkSize) {
+						sharkSize++;
+						eatCount = 0;
+					}
+					arr[peekNode.x][peekNode.y] = 0;
+					
+					que.clear();
+					que.offer(new Node(peekNode.x, peekNode.y, 0));
+					result += peekNode.dist;
+					visit = new boolean[N][N];
+					visit[peekNode.x][peekNode.y] = true;
+				}
+			}
 		}
-
 	} // End of BFS
 
 	private static boolean range_check() {
