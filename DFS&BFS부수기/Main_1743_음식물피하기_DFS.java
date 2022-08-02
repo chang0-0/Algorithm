@@ -12,7 +12,6 @@ public class Main_1743_음식물피하기_DFS {
 	static int x, y;
 	static int count = 1;
 	
-
 	public static void main(String[] args) throws Exception {
 		System.setIn(new FileInputStream("res/input_bj_1743.txt"));
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -46,7 +45,7 @@ public class Main_1743_음식물피하기_DFS {
 		}
 
 		System.out.println(max);
-	}
+	} // End of main
 	
 	static void DFS(int x, int y) {
 		visit[y][x] = true;
@@ -56,13 +55,13 @@ public class Main_1743_음식물피하기_DFS {
 			nowX = x + dirX[i];
 			nowY = y + dirY[i];
 			
-			if(Range_check() && visit[nowY][nowX] == false && map[nowY][nowX] > 0) {
+			if(range_check() && visit[nowY][nowX] == false && map[nowY][nowX] > 0) {
 				DFS(nowX, nowY);
 			}
 		}
-	}
+	} // End of DFS
 	
-	static boolean Range_check() {
+	static boolean range_check() {
 		return (nowX >= 0 && nowY >= 0 && nowX < M && nowY < N);
-	}
-}
+	} // End of range_check
+} // End of Main class

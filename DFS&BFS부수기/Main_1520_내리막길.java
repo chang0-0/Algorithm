@@ -14,7 +14,6 @@ public class Main_1520_내리막길 {
 	
 	static int nowX = 0; static int nowY = 0;
 	static int N, M;
-	static int H = 0;
 	
 	public static void main(String[] args) throws Exception {
 		System.setIn(new FileInputStream("res/1520.txt"));

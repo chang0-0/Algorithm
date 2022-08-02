@@ -49,7 +49,6 @@ public class Main_4963_섬의개수_DFS {
 		}
 		
 		System.out.println(sb);
-		
 	} // End of main
 	
 	static void DFS(int x, int y) {
@@ -69,5 +68,4 @@ public class Main_4963_섬의개수_DFS {
 	static boolean range_check() {
 		return (nowX >= 0 && nowY >= 0 && nowX < h && nowY < w);
 	} // End of range_check
-	
 } // End of Main class

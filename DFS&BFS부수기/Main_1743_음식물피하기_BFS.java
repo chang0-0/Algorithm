@@ -21,7 +21,7 @@ public class Main_1743_음식물피하기_BFS {
 			this.x = x;
 			this.y = y;
 		}
-	}
+	} // End of Node class
 	
 	public static void main(String[] args) throws Exception {
 		System.setIn(new FileInputStream("res/input_bj_1743.txt"));
@@ -42,7 +42,6 @@ public class Main_1743_음식물피하기_BFS {
 			map[y][x] = 1;
 		}
 
-		
 		// 1을 만나면 탐색 시작
 		int max = Integer.MIN_VALUE;
 		for(int i=0; i<N; i++) {
@@ -56,7 +55,7 @@ public class Main_1743_음식물피하기_BFS {
 		}
 		
 		System.out.println(max);
-	}
+	} // End of main
 	
 	static void BFS(int x, int y) {
 		que.offer(new Node(x, y));
@@ -71,19 +70,17 @@ public class Main_1743_음식물피하기_BFS {
 				nowY = node.y + dirY[i];
 				nowX = node.x + dirX[i];
 				
-				if(Range_check() && visit[nowY][nowX] == false && map[nowY][nowX] == 1) {     
+				if(range_check() && visit[nowY][nowX] == false && map[nowY][nowX] == 1) {     
 					que.offer(new Node(nowX, nowY));
 					visit[nowY][nowX] = true;
 					count ++;
 				}
 			}
 	
-		
 		}
-		
-	}
+	} // End of BFS
 	
-	static boolean Range_check() {
+	static boolean range_check() {
 		return (nowX >= 0 && nowY >= 0 && nowX < M && nowY < N);
-	}
-}
+	} // End of range_check
+} // End of Main class
