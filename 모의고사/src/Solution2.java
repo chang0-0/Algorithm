@@ -2,9 +2,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-public class Test2 {
+public class Solution2 {
 	public static void main(String[] args) {
-		Test2 t = new Test2();
+		Solution2 t = new Solution2();
 		String want[] = {"banana", "apple", "rice", "pork", "pot"};
 		int number[] = {3, 2, 2, 2, 1};
 		String discount[] = {"chicken", "apple", "apple", "banana", "rice", "apple", "pork", "banana", "pork", "rice", "pot", "banana", "apple", "banana"};
