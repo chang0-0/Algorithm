@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 public class Solution1 { 
 	public static void main(String[] args) {
 		Solution1 t = new Solution1();
-		String x = "12321";
-		String y = "42531";
+		String x = "1000";
+		String y = "2345";
 		
 		System.out.println(t.solution(x, y));
 	}// End of main
@@ -33,45 +33,42 @@ public class Solution1 {
     		map2.put(c2[i], map2.getOrDefault(c2[i], (long) 0)+1);
     	}
     	
-    	boolean check = true;
-    	if(map1.size() > map2.size()) {
-    		Iterator<Entry<Character, Long>> it = map1.entrySet().iterator();
-    		while(it.hasNext()) {
-    			Entry<Character, Long> entrySet = (Entry<Character, Long>)it.next();
-    			char key = entrySet.getKey();
-    			long value = entrySet.getValue();
-    			
-    			if( map2.containsKey(key) ) {
-    				check = false; 
-    				
-    				// 만약 겹치는 수가 있다.
-    				// 그 키에 해당하는 value를 찾아서 갯수를 비교하고 작은 쪽을 list에 삽입
-    				long value2 = map2.get(key);
-    				long min = Math.min(value, value2);
-    				for(int i=0; i<min; i++) {
-    					resultList.add(key);
-    				}	
-    			}	
-    		}
-    	} 
-    	
-		if(check == true) {
-			return "-1";
+		Iterator<Entry<Character, Long>> it = map1.entrySet().iterator();
+		while(it.hasNext()) {
+			Entry<Character, Long> entrySet = (Entry<Character, Long>)it.next();
+			char key = entrySet.getKey();
+			long value = entrySet.getValue();
+						
+			if( map2.containsKey(key) ) {
+				
+				// 만약 겹치는 수가 있다.
+				// 그 키에 해당하는 value를 찾아서 갯수를 비교하고 작은 쪽을 list에 삽입
+				long value2 = map2.get(key);
+				long min = Math.min(value, value2);
+				for(int i=0; i<min; i++) {
+					resultList.add(key);
+				}	
+			}
 		}
-		
+    	 
+    	
 		if(resultList.isEmpty()) {
 			return "-1";
 		}
 		
 		Collections.sort(resultList, Collections.reverseOrder());		
+		boolean zeroCheck = true;
 		for(char c : resultList) {
+			if(c != '0') zeroCheck = false;
 			sb.append(c);			
 		}
 		
-		if(Integer.parseInt(sb.toString()) == 0) {
+		// 0을 처리하는 방법이 문제였음.
+		if(zeroCheck == true) {
 			return "0";
 		}
-    	
-        return sb.toString();
+		
+		String resultAnswer = sb.toString();
+        return resultAnswer;
     }  // End of solution
 } // End of Solution class
