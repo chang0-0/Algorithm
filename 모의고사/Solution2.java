@@ -13,38 +13,24 @@ public class Solution2 {
 	}// End of main
 	
     public int solution(String[] want, int[] number, String[] discount) {
-        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<String, Integer> wantMap = new HashMap<>();
+        int total = 0;
         for(int i=0; i<want.length; i++) {
-        	map.put(want[i], number[i]);
+        	wantMap.put(want[i], number[i]);
+        	total += number[i];
         }
+        int result = 0;
         
-        int len = discount.length;
-        boolean check = true;
-//        for(int i=0; i<len; i++) {
-//        	if(map.containsKey(discount[i])) {
-//        		// 같은 값이 있을 경우 check = false
-//        		check = false;
-//        		break;
-//        	}
-//        }
-//        
-//        // 같은 값이 없음
-//        if(check == true) {
-//        	return 0;
-//        }
-
-        int sum = 0;
-        len = len - 10;
+        // 제품을 모두 할인 받을 수 있는 날을 계산
+        int len = discount.length - 10; //length는 길이 기준으로 1부터 시작하고, index는 0부터 시작하므로, 14 - 9가 맞는 계산임 하지만 10으로 하고, 조건을 이상으로 주면됨.
         for(int i=0; i<=len; i++) {
         	HashMap<String, Integer> discountMap = new HashMap<>();
         	for(int j=i; j<i+10; j++) {
-        		System.out.print(discount[j] + " ");
         		discountMap.put(discount[j], discountMap.getOrDefault(discount[j], 0)+1);
         	}
-        	System.out.println(" ");
         	
-        	check = true;
-    		Iterator<Entry<String, Integer>> it = map.entrySet().iterator();
+    		Iterator<Entry<String, Integer>> it = wantMap.entrySet().iterator();
+    		int sum = 0;
     		while(it.hasNext()) {
     			Entry<String, Integer> entrySet = (Entry<String, Integer>)it.next();
     			String key = entrySet.getKey();
@@ -53,18 +39,18 @@ public class Solution2 {
     			//key에 해당하는 값과 한번이라도 다를 경우,
     			if(discountMap.containsKey(key)) {
     				if(discountMap.get(key) != value ) {
-        				// 개수가 다르면 곧바로 break;
-        				check = false;
         				break;
         			}
+    				else sum += discountMap.get(key);
     			}
     		}
+    			
     		
-    		if(check == true) {
-    			sum++;
+    		if(sum == total) {
+    			result++;
     		}
         }
         
-        return sum;
+        return result;
     } // End of solution
 } // End of Test2 class
