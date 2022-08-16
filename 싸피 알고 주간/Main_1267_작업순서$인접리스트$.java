@@ -53,6 +53,7 @@ public class Main_1267_작업순서$인접리스트$ {
     private static void DFS(int startNode) {
         // 본인 노드의 선행 노드가 먼저 방문되었는지 확인하는 과정
         for(int num : nodeList.get(startNode)) {
+            // 갈 수 잇는 노드를 하나씩 꺼내보고, 방문하지 않은 노드가 있을 경우 먼저 실행하기 위해서 DFS(num)으로 실행
             if(!visit[num]) {
                 DFS(num);
             }
