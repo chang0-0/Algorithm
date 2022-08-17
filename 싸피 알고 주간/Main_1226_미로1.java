@@ -48,15 +48,15 @@ public class Main_1226_미로1 {
         visit[x][y] = true;
         que.offer(new Maze(x, y));
 
-        while(!que.isEmpty()) {
+        while (!que.isEmpty()) {
             Maze m = que.poll();
 
-            for(int i=0; i<4; i++) {
+            for (int i = 0; i < 4; i++) {
                 nowX = dirX[i] + m.x;
                 nowY = dirY[i] + m.y;
 
-                if(rangeCheck() && !visit[nowX][nowY] && (arr[nowX][nowY] == 0 || arr[nowX][nowY] == 3)) {
-                    if(arr[nowX][nowY] == 3) {
+                if (rangeCheck() && !visit[nowX][nowY] && (arr[nowX][nowY] == 0 || arr[nowX][nowY] == 3)) {
+                    if (arr[nowX][nowY] == 3) {
                         return 1;
                     }
 
@@ -65,7 +65,6 @@ public class Main_1226_미로1 {
                 }
             }
         }
-
         return 0;
     } // End of BFS
 
