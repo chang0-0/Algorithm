@@ -88,6 +88,8 @@ public class Main_1949_등산로_조정 {
             // 내가 있는 위치의 값을 1씩 줄여나가면서
             // 내가 갈 수 있는 곳이 있는지 찾는 것이 우선
 
+            // 백트래킹 & DFS 가지치기 조건
+            // 아래의 조건들이 가지치기임을 잊지 말자
             if (rangeCheck(nowX, nowY) && !visit[nowX][nowY] && temp[nowX][nowY] < height) {
                 visit[nowX][nowY] = true;
 
