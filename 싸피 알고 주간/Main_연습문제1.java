@@ -3,11 +3,11 @@ import java.io.*;
 
 public class Main_연습문제1 {
     private static final int ARRSIZE = 5;
-    static int dirX[] = {0, 0, -1, 1};
-    static int dirY[] = {1, -1, 0, 0};
+    static int[] dirX = {0, 0, -1, 1};
+    static int[] dirY = {1, -1, 0, 0};
     static int nowX, nowY;
-    static int arr[][];
-    static int resultArr[][];
+    static int[][] arr;
+    static int[][] resultArr;
 
     public static void main(String[] args) {
         arr = new int[ARRSIZE][ARRSIZE];
@@ -19,7 +19,7 @@ public class Main_연습문제1 {
             }
         }
         System.out.println("원본 배열");
-        for(int num[] : arr) {
+        for(int[] num : arr) {
             System.out.println(Arrays.toString(num));
         }
 
@@ -32,7 +32,7 @@ public class Main_연습문제1 {
         }
 
         System.out.println("절대값 배열");
-        for(int num[] : resultArr) {
+        for(int[] num : resultArr) {
             System.out.println(Arrays.toString(num));
         }
     } // End of main
@@ -46,8 +46,8 @@ public class Main_연습문제1 {
             nowY = y + dirY[i];
 
             if(rangeCheck()) {
-                int ohterValue = arr[nowX][nowY];
-                sum += Math.abs(center - ohterValue);
+                int otherValue = arr[nowX][nowY];
+                sum += Math.abs(center - otherValue);
             }
         }
         resultArr[x][y] = sum;

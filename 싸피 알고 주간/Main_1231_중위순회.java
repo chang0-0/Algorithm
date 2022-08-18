@@ -6,7 +6,7 @@ import java.io.*;
 public class Main_1231_중위순회 {
     // 중위순회를 하여 단어를 만들어라
     static int N;
-    static char arr[];
+    static char[] arr;
     static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws Exception {
@@ -38,7 +38,7 @@ public class Main_1231_중위순회 {
     } // End of main
 
     private static void inOrder(int node) {
-        System.out.printf("inOrder( %d ) \n", node);
+        //System.out.printf("inOrder( %d ) \n", node);
 
         if(node > N) {
             return;

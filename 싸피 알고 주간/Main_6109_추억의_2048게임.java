@@ -32,7 +32,7 @@ public class Main_6109_추억의_2048게임 {
                 }
             }
 
-
+            // 어떤 방향이냐에 따라 2차원 배열 탐색의 시작위치도 달라야한다.
             if (func.equals("down")) {
                 for (int i = N - 1; i >= 0; i--) {
                     for (int j = 0; j < N; j++) {
