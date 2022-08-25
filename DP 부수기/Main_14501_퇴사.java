@@ -1,52 +1,37 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 // https://www.acmicpc.net/problem/14501
-// 최대 수익을 구하는 프로그램을 작성
 public class Main_14501_퇴사 {
-    static Integer[] memo;
     static int[][] arr;
     static int N;
-    static int max = -1;
+    static int result = -1;
 
     public static void main(String[] args) throws Exception {
         System.setIn(new FileInputStream("res/14501.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        arr = new int[N + 1][2];
-        memo = new Integer[N + 1];
+        arr = new int[N][2];
 
-        for (int i = 1; i <= N; i++) {
+        for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             arr[i][0] = Integer.parseInt(st.nextToken());
             arr[i][1] = Integer.parseInt(st.nextToken());
         }
 
-        //for(int num[] : arr) System.out.println(Arrays.toString(num));
-        DP( 0, 0);
-        System.out.println(memo[N]);
+        quit(0, 0);
+        System.out.println(result);
     } // End of main
 
-    private static int DP(int depth, int total) {
-        System.out.println(Arrays.toString(memo));
-        // 재귀 카운트 N과 동일할 때,
-        if (depth >= N) {
-            return memo[depth];
+    private static void quit(int day, int totalPrice) {
+        if (day == N) {
+            result = Math.max(result, totalPrice);
+            return;
+        } else if (day > N) {
+            return;
         }
 
-        // 재귀 카운트
-        if(memo[depth] != null) {
-
-        }
-
-        if (memo[depth] == null) {
-            memo[depth] = total;
-        }
-
-        for (int i = 1; i <= N; i++) {
-            DP(depth + arr[i][0], total + arr[depth][1]);
-        }
-
-        return memo[depth];
+        quit(day + 1, totalPrice); // depth는 날짜를 의미하는데, 해당 날짜에 상담을 하지 않고, 넘기는 경우의 수
+        quit(day + arr[day][0], totalPrice + arr[day][1]); // 해당 날짜에 상담을 진행하는 경우의 수
     } // End of DP
 } // End of Main class
