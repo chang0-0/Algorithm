@@ -61,8 +61,11 @@ public class Main_1240_단순_2진_암호코드 {
     private static int calc(String code) {
         int[] ans = new int[8];
 
-        System.out.println(code);
+        System.out.println("code : " + code);
         System.out.println(code.length());
+//
+//        String test = "01001101000110110001000110101000110100011000110100010110";
+//        System.out.println(test.length());
 
 
         List<Integer> list = new ArrayList<>();
@@ -96,7 +99,9 @@ public class Main_1240_단순_2진_암호코드 {
                 list.add(isOne);
             }
 
-            for (int j = 0; j < 9; j++) {
+            System.out.println(list);
+
+            for (int j = 0; j < 10; j++) {
                 int count = 0;
                 for (int k = 0; k < 4; k++) {
                     int num = numberArr[j][k];
@@ -117,6 +122,8 @@ public class Main_1240_단순_2진_암호코드 {
             list.clear();
         }
 
+        System.out.println(Arrays.toString(ans));
+
         // 마지막 전체 계산.
         int odd = 0;
         int even = 0;
@@ -134,7 +141,7 @@ public class Main_1240_단순_2진_암호코드 {
         result = (even * 3) + odd;
 
 
-        System.out.println(result);
+        //System.out.println(result);
         if (result % 10 == 0) {
             return sum;
         } else {
