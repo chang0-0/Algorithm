@@ -1,13 +1,11 @@
 import java.util.*;
 import java.io.*;
 
-// for(char[] ch : barCode) System.out.println(Arrays.toString(ch));
 public class Main_1242_암호코드_스캔 {
-    static int N, M;
+    static int N, M, result;
     static char[][] barCode;
     static HashSet<String> codeSet;
-    static int groupNum;
-    static int codeStartIndex;
+    static HashSet<List<Integer>> finalCodeSet;
 
     static final String[] hexArr = {"0000", "0001", "0010", "0011", "0100",
             "0101", "0110", "0111", "1000", "1001",
@@ -15,7 +13,7 @@ public class Main_1242_암호코드_스캔 {
             "1111",
     };
 
-    // 각 코드의 기본 두께 비율
+    // 각 코드의 비율
     static final int[][] numberArr = {{3, 2, 1, 1}, {2, 2, 2, 1}, {2, 1, 2, 2}, {1, 4, 1, 1},
             {1, 1, 3, 2}, {1, 2, 3, 1}, {1, 1, 1, 4}, {1, 3, 1, 2}, {1, 2, 1, 3}, {3, 1, 1, 2}};
 
@@ -34,156 +32,180 @@ public class Main_1242_암호코드_스캔 {
             N = Integer.parseInt(st.nextToken());
             M = Integer.parseInt(st.nextToken());
             init(); // 변수 초기화 메소드
-            findGroup();
 
-            boolean check = false;
+            String preTemp = "";
             for (int i = 0; i < N; i++) {
                 String temp = br.readLine();
+                if (temp.equals(preTemp)) continue;
+
                 for (int j = 0; j < M; j++) {
-                    barCode[i][j] = temp.charAt(j);
-
-                    if (!check & barCode[i][j] != '0') {
-                        codeSet.add(temp);
-                        check = true;
-                    }
-                }
-            }
-
-
-            // 16진수로 만들어진 코드 2진수로 변환하는 작업
-            StringBuilder code;
-            for (String str : codeSet) {
-                code = new StringBuilder();
-                int index;
-
-                for (int i = 0; i < str.length(); i++) {
-                    char ch = str.charAt(i);
-
-                    if (ch == 'A') index = 10;
-                    else if (ch == 'B') index = 11;
-                    else if (ch == 'C') index = 12;
-                    else if (ch == 'D') index = 13;
-                    else if (ch == 'E') index = 14;
-                    else if (ch == 'F') index = 15;
-
-                    index = Character.getNumericValue(ch);
-                    code.append(hexArr[index]);
-                }
-                //System.out.println(code);
-
-                // 암호가 시작되는 부분 찾아야함
-                // 비율이 맞는 부분 찾기
-                for (int i = 0; i <= code.length() - (7 * groupNum); i++) {
-                    String temp = code.substring(i, (7 * groupNum) + i);
-
-                    int isZero = 0;
-                    int isOne = 0;
-                    List<Integer> list = new ArrayList<>();
-                    for (int j = 0; j < 7 * groupNum; j++) {
-                        char ch = temp.charAt(j);
-
-                        if (ch == '0') {
-                            if (isOne > 0) {
-                                list.add(isOne);
-                            }
-                            isZero++;
-                            isOne = 0;
-                        } else {
-                            if (isZero > 0) {
-                                list.add(isZero);
-                            }
-                            isOne++;
-                            isZero = 0;
-                        }
-
-                        // 리스트 사이즈가 5를 넘으면 할 필요없음
-                        if (list.size() >= 5) {
-                            break;
-                        }
-                    }
-
-                    // 마지막 하나 삽입
-                    if (isZero > 0) {
-                        list.add(isZero);
-                    } else {
-                        list.add(isOne);
-                    }
-
-                    if (list.size() == 4) {
-                        //System.out.println(" temp : " + temp);
-
-                        boolean rateCheck = true;
-                        int count = 0;
-                        for (int j = 0; j < numberArr.length; j++) {
-                            //System.out.println("j:  " + j);
-                            count = 0;
-
-                            for (int k = 0; k < 4; k++) {
-                                int num = numberArr[j][k];
-
-                                if (num != list.get(k)) {
-                                    //System.out.println("num : " + num + ", list.get : " + list.get(k));
-                                    rateCheck = false;
-                                    break;
-                                } else {
-                                    count++;
-                                }
-                            }
-
-                            // 비율이 4개 모두 일치할 경우 중지
-                            if (count == 4) {
-                                codeStartIndex = i; // 시작하는 곳 인덱스
-                                break;
-                            }
-                        }
-                    }
-
-                    if (codeStartIndex != -1) {
+                    char ch = temp.charAt(j);
+                    if (ch != '0') {
+                        // binary코드로 변환하여 set에 저장.
+                        codeSet.add(changeBinary(temp));
                         break;
                     }
                 }
+                preTemp = temp;
+            }
 
-                int[] answer = new int[8];
-                String newCode = code.substring(codeStartIndex, codeStartIndex + (56 * groupNum));
-                // System.out.println(newCode);
+            for (String str : codeSet) {
+                search(str);
+            }
 
-                List<Integer> list = new ArrayList<>();
-                StringBuilder calcStr = new StringBuilder();
-                for (int j = 0; j < newCode.length(); j++) {
-                    if (j % (7 * groupNum) == 0) {
-                        calc(calcStr.toString());
-                        calcStr = new StringBuilder();
-                    }
+            // 중복제거를 위해서 list를 사용했음, 일반 배열을 set에 넣으면 Hashcode가 달라서, 중복값이 들어가게됨
+            for (List<Integer> list : finalCodeSet) {
+                int num = calc(list);
+                result += num;
+            }
 
-                    calcStr.append(newCode.charAt(j));
-                }
-
-
-            } // End of for(set)
-
-
+            sb.append(result).append('\n');
         }
 
         bw.write(sb.toString());
         bw.close();
     } // End of main
 
-    private static void calc(String str) {
+    private static void search(String str) {
+        int zeroCount = 0;
+        int oneCount = 0;
+        boolean start = false;
+        int ratio = 11;
+
+        int[] resultCode = new int[8];
+        int resultCodeIndex = 7;
+
+        int[] oneCode = new int[4];
+        int oneCodeIndex = 3;
+
+        int len = str.length();
+        for (int i = len - 1; i >= 0; i--) {
+            char ch = str.charAt(i);
+
+            // 처음 1이 나오면 시작.
+            if (!start && ch == '1') {
+                start = true;
+            }
+
+            if (start && ch == '1') {
+                oneCount++;
+                if (zeroCount != 0) {
+                    oneCode[oneCodeIndex] = zeroCount;
+                    oneCodeIndex--;
+                }
+                zeroCount = 0;
+            } else if (start && ch == '0') {
+                zeroCount++;
+                if (oneCount != 0) {
+                    oneCode[oneCodeIndex] = oneCount;
+                    oneCodeIndex--;
+                }
+                oneCount = 0;
+            }
+
+            if (resultCodeIndex == 0 && oneCodeIndex == 0) {
+                resultCode[resultCodeIndex] = findNum(oneCode, ratio);
+
+                int lastNum = resultCode[resultCodeIndex];
+                int number = numberArr[lastNum][0];
+                // 하나의 비율을 알게되면, 여기서 비율 * 56으로 끊어서 i값을 증가시켜 바로 지나치도록 했음.
+                i -= (number * ratio);
+
+                // 중복제거를 위해서 list를 사용했음, 일반 배열을 set에 넣으면 Hashcode가 달라서, 중복값이 들어가게됨
+                List<Integer> tempList = new ArrayList<>();
+                for (int j = 0; j < 8; j++) {
+                    tempList.add(resultCode[j]);
+                }
+
+                finalCodeSet.add(tempList);
+
+                // 전체 코드하나가 완성되면 변수 초기화 진행해서 앞에 새로운 암호가 있는지 탐색.
+                zeroCount = 0;
+                oneCount = 0;
+                ratio = 11;
+
+                oneCodeIndex = 3;
+                resultCodeIndex = 7;
+                start = false;
+                continue;
+            }
+
+            if (oneCodeIndex == -1) {
+                if (ratio == 11) {
+                    for (int j = 0; j < 4; j++) {
+                        // 비율에는 항상 1이 들어가 있기 때문에 가장 작은 값이 1이됨.
+                        // 가장 작은 값이 비율이 됨.
+                        ratio = Math.min(ratio, oneCode[j]);
+                    }
+                }
+
+                // 코드 한칸 완성시 초기화.
+                resultCode[resultCodeIndex] = findNum(oneCode, ratio);
+                oneCodeIndex = 3;
+                resultCodeIndex--;
+            }
+        }
 
 
+    } // End of search
+
+    private static int findNum(int[] oneCode, int ratio) {
+        for (int i = 0; i < 10; i++) {
+            int count = 0;
+            for (int j = 3; j >= 0; j--) {
+                int num = numberArr[i][j] * ratio;
+
+                if (num == oneCode[j]) {
+                    count++;
+                    if (count == 3) {
+                        return i;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+        }
+
+        return -1;
+    } // End of findNum
+
+    private static int calc(List<Integer> resultCode) {
+        int sum = 0;
+        int even = 0;
+        int odd = 0;
+        for (int i = 0; i < 8; i++) {
+            int num = resultCode.get(i);
+            sum += num;
+
+            if (i % 2 == 0) {
+                even += num;
+            } else {
+                odd += num;
+            }
+        }
+
+        if (((even * 3) + odd) % 10 == 0) {
+            return sum;
+        }
+
+        return 0;
     } // End of calc
 
-    private static void findGroup() {
-        if (N == 100) groupNum = 1;
-        else if (N == 200) groupNum = 2;
-        else if (N == 500) groupNum = 3;
-        else if (N == 1000) groupNum = 4;
-        else if (N == 2000) groupNum = 5;
-    } // End of findGroup
+    private static String changeBinary(String hex) {
+        StringBuilder binary = new StringBuilder();
+        for (int i = 0; i < M; i++) {
+            char ch = hex.charAt(i);
+            binary.append(hexArr[Character.getNumericValue(ch)]);
+        }
+
+        return binary.toString();
+    } // End of changeBinary
 
     private static void init() {
         barCode = new char[N][M];
         codeSet = new HashSet<>();
-        codeStartIndex = -1;
+        finalCodeSet = new HashSet<>();
+        result = 0;
     } // End of init
 } // End of Main class
