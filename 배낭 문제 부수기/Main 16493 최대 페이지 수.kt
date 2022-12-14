@@ -3,9 +3,9 @@ import java.io.*
 
 private var N = 0
 private var M = 0
-private lateinit var books: Array<Book>
+private val books = Array(M) { Book1() }
 
-data class Book(
+private data class Book1(
     var day: Int = 0,
     var page: Int = 0
 ) // End of Book class
@@ -17,7 +17,6 @@ fun main() {
     var st = StringTokenizer(br.readLine())
     N = st.nextToken().toInt() // 남은 기간
     M = st.nextToken().toInt() // 챕터 수
-    books = Array(M) { Book() }
 
     // 남은 N일 동안, 책의 각 챕터 당 그 챕터를 전부 읽는데 소요되는 일 수와 페이지 수가 주어질 때, N일간 읽을 수 있는 최대 페이지 수를 구하시오
     for (i in 0 until M) {

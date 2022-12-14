@@ -11,7 +11,7 @@ import java.io.*
 private var N = 0
 private var X = 0
 private val pipeArr = Array(101) { Pipe() }
-private val memo = Array(101) { Array(10001) { 0 } }
+private val memo = Array(101) { Array(10001) { -1 } }
 
 private data class Pipe(var length: Int = 0, var quantity: Int = 0)
 
@@ -29,36 +29,25 @@ fun main() {
         pipeArr[i].quantity = st.nextToken().toInt()
     }
 
-    for (i in 0 until N) {
-        for (j in 0..X) {
-            memo[i][j] = -1 // i번째 파이프를 사용해서 j 길이를 만든다.
-        }
-    }
-
-    println(DP(0, 0))
+    println(DP(0, X))
 } // End of main
 
 private fun DP(index: Int, totalLength: Int): Int {
-
-    if (totalLength == X) {
+    if (memo[index][totalLength] != -1) {
+        return memo[index][totalLength]
+    } else if (totalLength == 0) {
         return 1
-    }
-    if (totalLength > X) {
-        return 0
-    }
-    if (index == N) {
+    } else if (index == N) {
         return 0
     }
 
-    var ret = memo[index][totalLength]
-    if (ret != -1) {
-        return ret
-    }
+    memo[index][totalLength] = 0
 
-    ret = 0
     for (i in 0..pipeArr[index].quantity) {
-        ret += DP(index + 1, totalLength + pipeArr[index].length * i)
+        if (pipeArr[index].length * i <= totalLength) {
+            memo[index][totalLength] += DP(index + 1, totalLength - pipeArr[index].length * i)
+        }
     }
 
-    return ret
+    return memo[index][totalLength]
 } // End of DFS
