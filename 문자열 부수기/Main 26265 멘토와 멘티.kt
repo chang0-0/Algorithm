@@ -12,21 +12,21 @@ import java.lang.StringBuilder
     그냥 list에 모든 값을 받은 후에 Collections.sort의 Compartor를 재정의해서 출력하니 정답이 나옴
 */
 
-private var mentoQue = PriorityQueue { o1: Mento, o2: Mento ->
-    return@PriorityQueue if (o1.mento > o2.mento) {
-        1
-    } else if (o1.mento < o2.mento) {
-        -1
-    } else {
-        if (o1.menti > o2.menti) {
-            -1
-        } else if (o1.menti < o2.menti) {
-            1
-        } else {
-            0
-        }
-    }
-}
+//private var mentoQue = PriorityQueue { o1: Mento, o2: Mento ->
+//    return@PriorityQueue if (o1.mento > o2.mento) {
+//        1
+//    } else if (o1.mento < o2.mento) {
+//        -1
+//    } else {
+//        if (o1.menti > o2.menti) {
+//            -1
+//        } else if (o1.menti < o2.menti) {
+//            1
+//        } else {
+//            0
+//        }
+//    }
+//}
 
 private var N = 0
 private var mentoList = LinkedList<Mento>()
@@ -34,23 +34,23 @@ private var mentoList = LinkedList<Mento>()
 private data class Mento(var mento: String = "", var menti: String = "") // End of Mento class
 
 fun main() {
-    val path = "C:\\Users\\Samsung\\Desktop\\코틀린 알고리즘\\src\\main\\kotlin\\문자열 부수기\\res\\b.txt"
+    val path = "C:\\Users\\Samsung\\Desktop\\코틀린 알고리즘\\src\\main\\kotlin\\문자열 부수기\\res\\26265.txt"
     val br = BufferedReader(File(path).bufferedReader())
     val bw = BufferedWriter(OutputStreamWriter(System.`out`))
     val sb = StringBuilder()
 
     N = br.readLine().toInt()
-//    for (i in 0 until N) {
-//        val st = StringTokenizer(br.readLine())
-//        mentoList.offer(Mento(st.nextToken(), st.nextToken()))
-//    }
+    for (i in 0 until N) {
+        val st = StringTokenizer(br.readLine())
+        mentoList.offer(Mento(st.nextToken(), st.nextToken()))
+    }
 
     //원래 처음 풀려고했던 방식인데 틀린 코드
 
-    for (i in 0 until N) {
-        val st = StringTokenizer(br.readLine())
-        mentoQue.offer(Mento(st.nextToken(), st.nextToken()))
-    }
+//    for (i in 0 until N) {
+//        val st = StringTokenizer(br.readLine())
+//        mentoQue.offer(Mento(st.nextToken(), st.nextToken()))
+//    }
 
 //    mentoQue.forEach {
 //        println(it)
@@ -74,14 +74,10 @@ fun main() {
     - 제일 마지막에 추가된 노드를 루트 자리로 이동한다.
     - 그 후 삽입처럼 크기에 맞게 정렬 과정을 진행한다.
 
-
-
-
      */
-    while (!mentoQue.isEmpty()) {
-        println(mentoQue.poll())
-    }
-
+//    while (!mentoQue.isEmpty()) {
+//        println(mentoQue.poll())
+//    }
 
     //정답 코드.
     Collections.sort(mentoList, kotlin.Comparator { o1, o2 ->
@@ -100,14 +96,10 @@ fun main() {
         }
     })
 
-//    mentoList.forEach {
-//        println(it)
-//    }
+    mentoList.forEach {
+        sb.append(it.mento).append(' ').append(it.menti).append('\n')
+    }
 
-//    mentoList.forEach {
-//        sb.append(it.mento).append(' ').append(it.menti).append('\n')
-//    }
-//
-//    bw.write(sb.toString())
-//    bw.close()
+    bw.write(sb.toString())
+    bw.close()
 } // End of main
