@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-public class Main_A_카트라이더_드리프트 {
+public class Main_27522_카트라이더_드리프트 {
     private static int redScore = 0;
     private static int blueScore = 0;
 
