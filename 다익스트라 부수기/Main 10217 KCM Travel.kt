@@ -29,18 +29,17 @@ private lateinit var br: BufferedReader
 private var N = 0 // 공항의 수
 private var M = 0 // 총 지원비용
 private var K = 0 // 티켓정보의 수
-private const val INF = Int.MAX_VALUE / 4
+private const val INF = Int.MAX_VALUE
 private var ans = 0
 
-private var memo: Array<IntArray> = Array(101) { IntArray(10001) } // memo[공항(노드)[비용(cost)] <- time이 저장됨
+private lateinit var memo: Array<IntArray>
 private lateinit var adjustList: MutableList<MutableList<Airport>>
 
 private data class Airport(var arrivalAirport: Int, var cost: Int, var time: Int) : Comparable<Airport> {
-    // 정렬 기준 : 시간이 최우선 이고, 시간이 같을 경우, 비용이 적은 순서로 정렬함
     override fun compareTo(other: Airport): Int {
-        return time - other.time
-    } // End of compareTo
-} // End of Airport class
+        return cost - other.cost
+    }
+}
 
 fun main() {
     val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\DP_부수기\\res\\10217.txt"
@@ -53,10 +52,6 @@ fun main() {
         input()
 
         dijkstra()
-
-        for (i in 1..M) {
-            ans = Math.min(ans, memo[N][i])
-        }
 
         if (ans == INF) {
             sb.append("Poor KCM").append('\n')
@@ -73,36 +68,28 @@ private fun dijkstra() {
     val pque = PriorityQueue<Airport>()
     pque.offer(Airport(1, 0, 0)) // 도착공항, 비용, 시간
 
-    ans = INF
     while (pque.isNotEmpty()) {
         val poll = pque.poll()
-        val arrivalAirport = poll.arrivalAirport
-        val cost = poll.cost
-        val time = poll.time
 
-        if (ans <= memo[arrivalAirport][cost]) {
-            continue
-        }
+        if (ans <= memo[poll.arrivalAirport][poll.cost]) continue
 
-        for (next in adjustList[arrivalAirport]) {
-            val nextAirport = next.arrivalAirport
-            val nextTime = time + next.time
-            val nextCost = cost + next.cost
+        for (next in adjustList[poll.arrivalAirport]) {
+            val cost = poll.cost + next.cost
+            if (cost > M) continue
 
-            if (nextCost > M) continue
+            val time = memo[poll.arrivalAirport][poll.cost] + next.time
+            if (ans <= time) continue
 
-            val memoTime = memo[arrivalAirport][cost] + next.time
-            if (ans <= memoTime) continue
-            if (nextAirport == N) {
-                ans = memoTime
+            if (next.arrivalAirport == N) {
+                ans = time
                 continue
             }
 
-            if (memoTime < memo[nextAirport][nextCost]) {
-                if (memo[nextAirport][nextCost] == INF) {
-                    pque.offer(Airport(nextAirport, nextCost, memoTime))
+            if (time < memo[next.arrivalAirport][cost]) {
+                if (memo[next.arrivalAirport][cost] == INF) {
+                    pque.offer(Airport(next.arrivalAirport, cost, time))
                 }
-                memo[nextAirport][nextCost] = memoTime
+                memo[next.arrivalAirport][cost] = time
             }
         }
     }
@@ -113,17 +100,19 @@ private fun input() {
     N = st.nextToken().toInt()
     M = st.nextToken().toInt()
     K = st.nextToken().toInt()
-
-    memo = Array(N + 1) { IntArray(M + 1) { INF } }
+    ans = INF
 
     adjustList = ArrayList()
+    memo = Array(N + 1) { IntArray(M + 1) { INF } } // memo[공항(노드)[비용(cost)] <- time이 저장됨
+
     for (i in 0..N) {
         adjustList.add(ArrayList())
     }
 
-    for(i in 0 .. M) {
+    for (i in 0..M) {
         memo[1][i] = 0
     }
+
 
     while (K-- > 0) {
         st = StringTokenizer(br.readLine())
