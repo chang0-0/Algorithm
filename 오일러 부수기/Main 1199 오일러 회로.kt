@@ -71,31 +71,6 @@ private fun euler(node: Int) {
         idx++
     }
 
-
-//    for (i in 0 until adjList[node].size) {
-//        val nextNode = adjList[node][i].num
-//        println("adjList[$node] : ${adjList[node]}")
-//        println("adjList[$node][$i] : ${adjList[node][i]}")
-//        println("nextNode : $nextNode")
-//
-//        for (j in 0 until adjList[nextNode].size) {
-//            if (adjList[nextNode][j].num == node) {
-//                adjList[nextNode][j].cnt--
-//                if (adjList[nextNode][j].cnt == 0) {
-//                    adjList[nextNode].removeAt(j)
-//                }
-//                break
-//            }
-//        }
-//
-//        adjList[node][i].cnt--
-//        if (adjList[node][i].cnt == 0) {
-//            adjList[node].removeAt(i)
-//        }
-//
-//        euler(nextNode)
-//    }
-
     sb.append(node).append(' ')
 } // End of DFS
 
