@@ -21,10 +21,9 @@ private lateinit var sb: StringBuilder
 
 // variables
 private var N = 0
-private const val MAX = 1001
+private lateinit var adjList: MutableList<MutableList<Node>>
 
-private var arr: Array<IntArray> = Array(MAX) { IntArray(MAX) }
-private var degree = IntArray(MAX)
+private data class Node(var num: Int, var cnt: Int)
 
 fun main() {
     val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\오일러_경로_부수기\\1199.txt"
@@ -46,13 +45,56 @@ fun main() {
 } // End of main
 
 private fun euler(node: Int) {
-    for (next in 1..N) {
-        while (arr[node][next] > 0) {
-            arr[node][next]--
-            arr[next][node]--
-            euler(next)
+
+    var idx = 0
+    while (adjList[node].isNotEmpty()) {
+        val nextNode = adjList[node][idx].num
+
+        var idx2 = 0
+        while (adjList[nextNode].isNotEmpty()) {
+            if (adjList[nextNode][idx2].num == node) {
+                adjList[nextNode][idx2].cnt--
+                if (adjList[nextNode][idx2].cnt == 0) {
+                    adjList[nextNode].removeAt(idx2)
+                }
+                break
+            }
+            idx2++
         }
+
+        adjList[node][idx].cnt--
+        if (adjList[node][idx].cnt == 0) {
+            adjList[node].removeAt(idx--)
+        }
+
+        euler(nextNode)
+        idx++
     }
+
+
+//    for (i in 0 until adjList[node].size) {
+//        val nextNode = adjList[node][i].num
+//        println("adjList[$node] : ${adjList[node]}")
+//        println("adjList[$node][$i] : ${adjList[node][i]}")
+//        println("nextNode : $nextNode")
+//
+//        for (j in 0 until adjList[nextNode].size) {
+//            if (adjList[nextNode][j].num == node) {
+//                adjList[nextNode][j].cnt--
+//                if (adjList[nextNode][j].cnt == 0) {
+//                    adjList[nextNode].removeAt(j)
+//                }
+//                break
+//            }
+//        }
+//
+//        adjList[node][i].cnt--
+//        if (adjList[node][i].cnt == 0) {
+//            adjList[node].removeAt(i)
+//        }
+//
+//        euler(nextNode)
+//    }
 
     sb.append(node).append(' ')
 } // End of DFS
@@ -60,22 +102,28 @@ private fun euler(node: Int) {
 private fun input(): Boolean {
     N = br.readLine().toInt()
 
-    for (i in 1..N) {
-        val st = StringTokenizer(br.readLine())
-        for (j in 1..N) {
-            var temp = st.nextToken().toInt()
-            while (temp-- > 0) {
-                arr[i][j]++
-                degree[j]++
-            }
-        }
+    adjList = ArrayList()
+    repeat(N + 1) {
+        adjList.add(ArrayList())
     }
 
-    // 그래프의 한 노드에서 차수가 하나라도 홀수 일 경우 오일러회로가 불가능하다.
-    // 모든 정점의 차수가 짝수가 되어야 함 하나라도 짝수가 되지 않으면 오일러 회로가 불가능하다.
-    // 두개 이상의 컴포넌트로 분리가 되면 안된다.
     for (i in 1..N) {
-        if (degree[i] % 2 == 1) {
+        val st = StringTokenizer(br.readLine())
+        var sum = 0
+        for (j in 1..N) {
+            val temp = st.nextToken().toInt()
+
+            if (i < j && temp > 0) {
+                adjList[i].add(Node(j, temp))
+                adjList[j].add(Node(i, temp))
+            }
+            sum += temp
+        }
+
+        // 그래프의 한 노드에서 차수가 하나라도 홀수 일 경우 오일러회로가 불가능하다.
+        // 모든 정점의 차수가 짝수가 되어야 함 하나라도 짝수가 되지 않으면 오일러 회로가 불가능하다.
+        // 두개 이상의 컴포넌트로 분리가 되면 안된다.
+        if (sum % 2 != 0) {
             return false
         }
     }
