@@ -76,7 +76,6 @@ private fun DFS(startX: Int, startY: Int, index: Int) {
     if (index >= 4) {
         // 필수조건 : S가 최소 4개는 있어야 한다, -> Y가 4개가 되면 실패.
         // 즉, 4개까지만 조합해 보고 최소한으로 가능한지 불가능한지 판단이 가능하다.
-
         if (isPossible(index)) {
             println("checkArray : ${checkArray.contentToString()}")
             ans++
