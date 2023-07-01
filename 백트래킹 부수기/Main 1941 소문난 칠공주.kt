@@ -26,13 +26,12 @@ private lateinit var br: BufferedReader
 private var N = 5
 private var ans = 0
 
-private var map = Array(5) { CharArray(5) }
-private var isVisited = Array(5) { BooleanArray(5) }
-private var wholeIsVisited = Array(5) { BooleanArray(5) }
+private var map = Array(N) { CharArray(N) }
+private var isVisited = Array(N) { BooleanArray(N) }
 private var checkArray = CharArray(7)
 private var dirX = arrayOf(-1, 1, 0, 0)
 private var dirY = arrayOf(0, 0, -1, 1)
-
+private var set = HashSet<String>()
 
 fun main() {
     val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\백트래킹_부수기\\res\\1941.txt"
@@ -42,90 +41,64 @@ fun main() {
 
     input()
 
-    map.forEach {
-        println(it.contentToString())
-    }
-
-    // 백트래킹의 핵심은 가지치기
-    for (i in 0 until N) {
-        for (j in 0 until N) {
-            wholeIsVisited[i][j] = true
-            isVisited[i][j] = true
-            println("DFS($i,$j,${0})")
-            DFS(i, j, 0)
-            isVisited[i][j] = false
-            //wholeIsVisited[i][j] = false
-        }
-    }
-
-    // 끝나고 난 후 isVisited가 전체 다시 false로 되어있어야 함
-    isVisited.forEach {
-        println(it.contentToString())
-    }
-
-    wholeIsVisited.forEach {
-        println(it.contentToString())
-    }
+    DFS(0)
 
     sb.append(ans)
     bw.write(sb.toString())
     bw.close()
 } // End of main
 
-private fun DFS(startX: Int, startY: Int, index: Int) {
-    if (index >= 4) {
-        // 필수조건 : S가 최소 4개는 있어야 한다, -> Y가 4개가 되면 실패.
-        // 즉, 4개까지만 조합해 보고 최소한으로 가능한지 불가능한지 판단이 가능하다.
-        if (isPossible(index)) {
-            println("checkArray : ${checkArray.contentToString()}")
-            ans++
+private fun DFS(depth: Int) {
+    if (depth == 7) {
+        var cnt = 0
+        val sb = StringBuilder()
+
+        for (i in 0 until N) {
+            for (j in 0 until N) {
+                if (isVisited[i][j]) {
+                    sb.append(i).append(j)
+                    if (map[i][j] == 'S') {
+                        cnt++
+                    }
+                }
+            }
         }
 
-        if (index == 7) return
+        if (cnt >= 4 && !set.contains(sb.toString())) {
+            set.add(sb.toString())
+            ans++
+            return
+        }
+
+        return
     }
 
-    for (i in 0 until 4) {
-        val nextX = startX + dirX[i]
-        val nextY = startY + dirY[i]
-        println("nextX : $nextX , nextY : $nextY")
+    for (i in 0 until N) {
+        for (j in 0 until N) {
 
-        if (!rangeCheck(nextX, nextY)) continue
-        if (isVisited[nextX][nextY]) continue
-        if (wholeIsVisited[nextX][nextY]) continue
+            if (depth != 0) {
+                var cnt = 0
+                for (k in 0 until 4) {
+                    val nextX = dirX[k] + i
+                    val nextY = dirY[k] + j
 
-        checkArray[index] = map[nextX][nextY]
-        isVisited[nextX][nextY] = true
-        DFS(nextX, nextY, index + 1)
-        isVisited[nextX][nextY] = false
+                    if (!rangeCheck(nextX, nextY)) continue
+                    if (isVisited[nextX][nextY]) cnt++
+                }
+                if (cnt == 0) continue
+            }
+
+            if (isVisited[i][j]) continue
+
+            isVisited[i][j] = true
+            // 백트래킹의 핵심은 가지치기
+            // 25C7 조합
+            checkArray[depth] = map[i][j]
+            DFS(depth + 1)
+            isVisited[i][j] = false
+        }
     }
 } // End of DFS
-
-private fun isPossible(checkSize: Int): Boolean {
-    // 4개 까지만 해도 판단이 가능함.
-    var sCnt = 0
-    var yCnt = 0
-
-    for (i in 0 until checkSize) {
-        val temp = checkArray[i]
-        if (temp == 'S') {
-            sCnt++
-            if (sCnt >= 4) {
-                return true
-            }
-        } else {
-            yCnt++
-            if (yCnt >= 4) {
-                return false
-            }
-        }
-    }
-
-    if (sCnt >= 4) {
-        return true
-    } else {
-        return false
-    }
-} // End of isPossible
 
 private fun rangeCheck(nextX: Int, nextY: Int): Boolean {
     return nextX < N && nextX >= 0 && nextY < N && nextY >= 0
@@ -133,9 +106,6 @@ private fun rangeCheck(nextX: Int, nextY: Int): Boolean {
 
 private fun input() {
     for (i in 0 until N) {
-        val temp = br.readLine()
-        for (j in 0 until N) {
-            map[i][j] = temp[j]
-        }
+        map[i] = br.readLine().toCharArray()
     }
 } // End of input
