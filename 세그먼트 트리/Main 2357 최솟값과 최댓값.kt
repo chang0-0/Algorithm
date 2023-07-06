@@ -13,11 +13,6 @@ private lateinit var br: BufferedReader
 private var N = 0
 private var M = 0
 
-private val arr = IntArray(100_001)
-
-private lateinit var minTree: IntArray
-private lateinit var maxTree: IntArray
-
 fun main() {
     val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\BOJ_2357\\res\\2357.txt"
     br = BufferedReader(File(path).bufferedReader())
@@ -26,16 +21,25 @@ fun main() {
 
     input()
 
-    makeTree(minTree, 1, 1, N, "min")
-    makeTree(maxTree, 1, 1, N, "max")
+    val arr = IntArray(N + 1)
+    for (i in 1..N) {
+        arr[i] = br.readLine().toInt()
+    }
 
+    val minTree = IntArray(N * 4)
+    val maxTree = IntArray(N * 4)
+
+    makeTree(arr, maxTree, 1, 1, N, "max") // 최대 트리 만들기
+    makeTree(arr, minTree, 1, 1, N, "min") // 최소 트리 만들기
 
     while (M-- > 0) {
         val st = StringTokenizer(br.readLine())
         val a = st.nextToken().toInt()
         val b = st.nextToken().toInt()
 
-        sb.append(findVal(minTree, 1, 1, N, a, b, "min")).append(' ').append(findVal(maxTree, 1, 1, N, a, b, "max"))
+        sb.append(findVal(minTree, 1, 1, N, a, b, "min"))
+            .append(' ')
+            .append(findVal(maxTree, 1, 1, N, a, b, "max"))
             .append('\n')
     }
 
@@ -43,53 +47,63 @@ fun main() {
     bw.close()
 } // End of main
 
-private fun makeTree(tree: IntArray, node: Int, start: Int, end: Int, mode: String): Int {
-    if (start == end) return arr[start]
-
-    val mid = (start + end) / 2
-    val left = makeTree(tree, node * 2, start, mid, mode)
-    val right = makeTree(tree, node * 2 + 1, mid + 1, end, mode)
-
-    if (mode == "min") {
-        tree[node] = Math.min(left, right)
-    } else {
-        tree[node] = Math.max(left, right)
+private fun makeTree(arr: IntArray, tree: IntArray, node: Int, start: Int, end: Int, mode: String): Int {
+    if (start == end) {
+        tree[node] = arr[start]
+        return tree[node]
     }
 
-    return tree[node]
+    val mid = (start + end) / 2
+    val left = makeTree(arr, tree, node * 2, start, mid, mode)
+    val right = makeTree(arr, tree, node * 2 + 1, mid + 1, end, mode)
+
+    return when (mode) {
+        "max" -> {
+            tree[node] = Math.max(left, right)
+            tree[node]
+        }
+
+        else -> {
+            tree[node] = Math.min(left, right)
+            tree[node]
+        }
+    }
 } // End of makeTree
 
 private fun findVal(tree: IntArray, node: Int, start: Int, end: Int, left: Int, right: Int, mode: String): Int {
+    // 범위 밖
     if (end < left || start > right) {
-        if (mode == "min") {
-            return Int.MAX_VALUE
-        } else {
-            return 0
+        return when (mode) {
+            "min" -> {
+                Int.MAX_VALUE
+            }
+
+            else -> {
+                0
+            }
         }
     }
 
+    // 범위 안
     if (left <= start && end <= right) return tree[node]
 
     val mid = (start + end) / 2
     val leftVal = findVal(tree, node * 2, start, mid, left, right, mode)
     val rightVal = findVal(tree, node * 2 + 1, mid + 1, end, left, right, mode)
 
-    if (mode == "min") {
-        return Math.min(leftVal, rightVal)
-    } else {
-        return Math.max(leftVal, rightVal)
+    return when (mode) {
+        "min" -> {
+            Math.min(leftVal, rightVal)
+        }
+
+        else -> {
+            Math.max(leftVal, rightVal)
+        }
     }
 } // End of findVal
 
 private fun input() {
-    var st = StringTokenizer(br.readLine())
-    N = st.nextToken().toInt()
+    val st = StringTokenizer(br.readLine())
+    N = st.nextToken().toInt() // 정수의 개수
     M = st.nextToken().toInt()
-
-    for (i in 1..N) {
-        arr[i] = br.readLine().toInt()
-    }
-
-    minTree = IntArray(N * 4)
-    maxTree = IntArray(N * 4)
 } // End of input
