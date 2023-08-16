@@ -33,25 +33,27 @@ fun main() {
 private fun solve(): String {
     val sb = StringBuilder()
 
-
-    memo.forEach {
-        println(it.contentToString())
-    }
-    println("")
-    println("")
-
     for (n in N - 1 downTo 0) {
         for (m in M - 1 downTo 0) {
-            if (n == N - 1 && m == M - 1) continue
+            if (n == N - 1 && m == M - 1) {
+                // 처음 시작은 통과
+                continue
+            }
 
-            if (n == N - 1) memo[n][m] += memo[n][m + 1]
-            else if (m == M - 1) memo[n][m] += memo[n + 1][m]
-            else memo[n][m] += min(memo[n + 1][m], memo[n][m + 1])
+            when {
+                n == (N - 1) -> {
+                    memo[n][m] += memo[n][m + 1]
+                }
+
+                m == (M - 1) -> {
+                    memo[n][m] += memo[n + 1][m]
+                }
+
+                else -> {
+                    memo[n][m] += min(memo[n + 1][m], memo[n][m + 1])
+                }
+            }
         }
-    }
-
-    memo.forEach {
-        println(it.contentToString())
     }
 
     if (memo[0][0] > H) {
