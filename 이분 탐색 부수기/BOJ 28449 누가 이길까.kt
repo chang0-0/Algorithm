@@ -40,56 +40,34 @@ fun main() {
 private fun solve(): String {
     val sb = StringBuilder()
 
-    var win = 0
-    var draw = 0
-    var lose = 0
+    var win: Long = 0
+    var draw: Long = 0
+    var lose: Long = 0
 
     val hiSize = HIArr.size
     val arcSize = ARCArr.size
     for (i in 0 until hiSize) {
-        val target = HIArr[i]
-        val idx = binarySearch(0, arcSize - 1, target)
-        println("idx : $idx")
+        val lower = lowerBound(HIArr[i])
+        val upper = upperBound(HIArr[i])
 
-        val midValue = ARCArr[idx] // 찾은 중앙값
-        if (midValue == target) {
-            draw++
-        } else if (midValue < target) {
-            win += (arcSize / 2) + 1
-            lose += (arcSize / 2) - 1
-        } else {
-            win += (arcSize / 2) - 1
-            lose += (arcSize / 2) + 1
-        }
+        win += lower
+        draw += upper - lower
     }
+
+    lose = N * M - (win + draw)
 
     sb.append(win).append(' ').append(lose).append(' ').append(draw)
     return sb.toString()
 } // End of solve()
 
-private fun binarySearch(low: Int, high: Int, find: Int): Int { // 인덱스를 찾는거임.
-    if (low > high) {
-        return -1
-    }
+private fun lowerBound(low: Int, high: Int, target: Int): Int {
+    if ()
 
-    // 인덱스를 이분탐색해서 나랑 가장 가까운 값을 찾아야함
-    val mid = (low + high) / 2
-    if (ARCArr[mid] < find) {
-        val temp = binarySearch(low, mid - 1, find)
+} // End of lowerBound()
 
-        when (temp) {
-            -1 -> {
-                return mid
-            }
+private fun upperBound(target: Int): Int {
 
-            else -> {
-                return temp
-            }
-        }
-    } else {
-        return binarySearch(mid + 1, high, find)
-    }
-} // End of binarySearch
+} // End of upperBound
 
 private fun input() {
     StringTokenizer(br.readLine()).run {
@@ -108,7 +86,11 @@ private fun input() {
             nextToken().toInt()
         }
     }
-
     HIArr.sort()
     ARCArr.sort()
+
+    println(HIArr.binarySearch(1))
+    println(ARCArr.binarySearch(1))
+
+
 } // End of input()
