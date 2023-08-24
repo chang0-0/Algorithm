@@ -22,7 +22,6 @@ private lateinit var br: BufferedReader
 // variables
 private var N = 0
 private var M = 0
-
 private lateinit var HIArr: IntArray
 private lateinit var ARCArr: IntArray
 
@@ -39,35 +38,42 @@ fun main() {
 
 private fun solve(): String {
     val sb = StringBuilder()
+    var hiWin = 0L
+    var draw = 0L
+    var arcWin = 0L
 
-    var win: Long = 0
-    var draw: Long = 0
-    var lose: Long = 0
+    for (i in 0 until M) {
+        val lower = lowerBound(0, N, ARCArr[i])
+        val upper = upperBound(0, N, ARCArr[i])
+        val d = upper - lower
 
-    val hiSize = HIArr.size
-    val arcSize = ARCArr.size
-    for (i in 0 until hiSize) {
-        val lower = lowerBound(HIArr[i])
-        val upper = upperBound(HIArr[i])
-
-        win += lower
-        draw += upper - lower
+        draw += d
+        hiWin += N - upper
+        arcWin += upper - d
     }
 
-    lose = N * M - (win + draw)
-
-    sb.append(win).append(' ').append(lose).append(' ').append(draw)
+    sb.append(hiWin).append(' ').append(arcWin).append(' ').append(draw)
     return sb.toString()
 } // End of solve()
 
 private fun lowerBound(low: Int, high: Int, target: Int): Int {
-    if ()
+    if (low == high) return low
 
+    val mid = (low + high) / 2
+    return if (HIArr[mid] < target) {
+        lowerBound(mid + 1, high, target)
+    } else lowerBound(low, mid, target)
 } // End of lowerBound()
 
-private fun upperBound(target: Int): Int {
+// 찾고자 하는 값 이하의 값 중 가장 큰 값을 갖는 요소의 인덱스 + 1 을 반환
+fun upperBound(low: Int, high: Int, target: Int): Int {
+    if (low == high) return low
 
-} // End of upperBound
+    val mid = (low + high) / 2
+    return if (HIArr[mid] <= target) {
+        upperBound(mid + 1, high, target)
+    } else upperBound(low, mid, target)
+} // End of upperBound()
 
 private fun input() {
     StringTokenizer(br.readLine()).run {
@@ -86,11 +92,6 @@ private fun input() {
             nextToken().toInt()
         }
     }
+
     HIArr.sort()
-    ARCArr.sort()
-
-    println(HIArr.binarySearch(1))
-    println(ARCArr.binarySearch(1))
-
-
 } // End of input()
