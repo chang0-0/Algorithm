@@ -13,6 +13,7 @@ private lateinit var br: BufferedReader
 // variables
 private var N = 0
 private var T = 0
+private var sum = 0
 private lateinit var arr: Array<Problem>
 private lateinit var memo: Array<IntArray>
 
@@ -32,29 +33,22 @@ fun main() {
 private fun solve(): String {
     val sb = StringBuilder()
 
-    topDown(N, T)
-    memo.forEach {
-        println(it.contentToString())
-    }
-
+    sb.append(sum - knapsack(N, T))
     return sb.toString()
 } // End of solve()
 
-private fun topDown(n: Int, t: Int): Int {
-    println("topDown($n, $t)")
-
+private fun knapsack(n: Int, t: Int): Int {
     if (n == 0 || t <= 0) return 0
     if (memo[n][t] != -1) return memo[n][t]
 
-    println("memo[$n][$t] = ${memo[n][t]}")
-    memo[n][t] = topDown(n - 1, t)
+    memo[n][t] = knapsack(n - 1, t)
+    if (t >= arr[n].day) {
+        memo[n] [t] = Math.max(memo[n][t], knapsack(n - 1, t - arr[n].day) + arr[n].penalty)
 
-    if (t - arr[n].day >= 0) {
-        memo[n][t] = memo[n][t].coerceAtMost(topDown(n - 1, t - arr[n].day) + arr[n].penalty)
     }
 
     return memo[n][t]
-} // End of topDown()
+} // End of knapsack()
 
 private fun input() {
     StringTokenizer(br.readLine()).run {
@@ -65,11 +59,12 @@ private fun input() {
     arr = Array(N + 1) { Problem() }
     for (i in 1..N) {
         StringTokenizer(br.readLine()).run {
-            Problem(
+            arr[i] = Problem(
                 nextToken().toInt(),
                 nextToken().toInt()
             )
         }
+        sum += arr[i].penalty
     }
 
     memo = Array(N + 1) { IntArray(T + 1) { -1 } }
