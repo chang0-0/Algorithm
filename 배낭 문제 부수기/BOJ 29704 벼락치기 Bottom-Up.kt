@@ -14,10 +14,9 @@ private lateinit var br: BufferedReader
 private var N = 0
 private var T = 0
 private var sum = 0
+
 private lateinit var arr: Array<Problem>
 private lateinit var memo: Array<IntArray>
-
-private data class Problem(var day: Int = 0, var penalty: Int = 0)
 
 fun main() {
     val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\BOJ_29704\\res.txt"
@@ -33,22 +32,21 @@ fun main() {
 private fun solve(): String {
     val sb = StringBuilder()
 
-    sb.append(sum - knapsack(N, T))
+    knapsack()
+    sb.append(sum - memo[N][T])
     return sb.toString()
 } // End of solve()
 
-private fun knapsack(n: Int, t: Int): Int {
-    if (n == 0 || t <= 0) return 0
-    if (memo[n][t] != -1) return memo[n][t]
-
-    memo[n][t] = knapsack(n - 1, t)
-    if (t >= arr[n].day) {
-        memo[n] [t] = Math.max(memo[n][t], knapsack(n - 1, t - arr[n].day) + arr[n].penalty)
-
+private fun knapsack() {
+    for (i in 1..N) {
+        for (j in 1..T) {
+            memo[i][j] = memo[i - 1][j]
+            if (arr[i].day <= j) {
+                memo[i][j] = memo[i][j].coerceAtLeast(memo[i - 1][j - arr[i].day] + arr[i].penalty)
+            }
+        }
     }
-
-    return memo[n][t]
-} // End of knapsack()
+} // End of knapsack
 
 private fun input() {
     StringTokenizer(br.readLine()).run {
@@ -64,8 +62,9 @@ private fun input() {
                 nextToken().toInt()
             )
         }
+
         sum += arr[i].penalty
     }
 
-    memo = Array(N + 1) { IntArray(T + 1) { -1 } }
+    memo = Array(N + 1) { IntArray(T + 1) }
 } // End of input()
