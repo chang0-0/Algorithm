@@ -26,6 +26,7 @@ private const val INF = Int.MAX_VALUE / 4
 
 private lateinit var adjList: MutableList<MutableList<Node>>
 private lateinit var dist: IntArray
+private lateinit var pre: IntArray
 
 private data class Node(var node: Int, var time: Int)
 
@@ -44,24 +45,39 @@ private fun solve(): String {
     val sb = StringBuilder()
 
     dijkstra()
+    sb.append(dist[end]).append('\n')
 
-    val deque: Deque<Int> = LinkedList()
+    val pathList = LinkedList<Int>()
+    var cur = end
+    while (cur != start) {
+        pathList.offerFirst(cur)
+        cur = pre[cur]
+    }
 
+    pathList.offerFirst(start)
+    sb.append(pathList.size).append('\n')
+    while (pathList.isNotEmpty()) {
+        sb.append(pathList.pollFirst()).append(' ')
+    }
 
     return sb.toString()
 } // End of solve()
 
 private fun dijkstra() {
-    val pque = PriorityQueue<Node>()
+    val pque = PriorityQueue(compareBy<Node> { it.time })
     pque.offer(Node(start, 0))
     dist[start] = 0
 
     while (pque.isNotEmpty()) {
         val nowNode = pque.poll()
 
+        if (nowNode.node == end) break
+        if (nowNode.time > dist[nowNode.node]) continue
+
         for (nextNode in adjList[nowNode.node]) {
             if (dist[nextNode.node] > dist[nowNode.node] + nextNode.time) {
                 dist[nextNode.node] = dist[nowNode.node] + nextNode.time
+                pre[nextNode.node] = nowNode.node
                 pque.offer(Node(nextNode.node, dist[nextNode.node]))
             }
         }
@@ -73,6 +89,7 @@ private fun input() {
     M = br.readLine().toInt() // 버스의 개수
 
     dist = IntArray(N + 1) { INF }
+    pre = IntArray(N + 1)
     adjList = ArrayList()
     repeat(N + 1) {
         adjList.add(ArrayList())
