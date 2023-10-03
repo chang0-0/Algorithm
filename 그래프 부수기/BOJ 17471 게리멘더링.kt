@@ -32,7 +32,7 @@ fun main() {
 private fun solve(): String {
     val sb = StringBuilder()
 
-    DFS(1, 0)
+    DFS(1)
 
     if (ans == Int.MAX_VALUE) {
         sb.append(-1)
@@ -43,23 +43,23 @@ private fun solve(): String {
     return sb.toString()
 } // End of solve()
 
-private fun DFS(node: Int, depth: Int) {
-    if (depth == N) return
-
+private fun DFS(node: Int) {
     if (node == N) {
         val g1 = ArrayList<Int>()
         val g2 = ArrayList<Int>()
 
         for (i in 1..N) {
             if (isVisited[i]) {
+                // 방문한 노드들은 g1에 추가
                 g1.add(i)
             } else {
+                // 방문되지 않은 노드들은 g2에 추가
                 g2.add(i)
             }
         }
 
-
         if (g1.isEmpty() || g2.isEmpty()) return
+        // 완성된 조합이 인접한 그룹인지 확인
         if (!BFS(g1) || !BFS(g2)) return
 
         var sum1 = 0
@@ -76,10 +76,11 @@ private fun DFS(node: Int, depth: Int) {
         return
     }
 
+    // 백트래킹
     isVisited[node] = true
-    DFS(node + 1, depth + 1)
+    DFS(node + 1)
     isVisited[node] = false
-    DFS(node + 1, depth + 1)
+    DFS(node + 1)
 } // End of DFS()
 
 private fun BFS(group: ArrayList<Int>): Boolean {
@@ -93,14 +94,15 @@ private fun BFS(group: ArrayList<Int>): Boolean {
         val nowNode = que.poll()
 
         for (nextNode in adjList[nowNode]) {
-            if (!vis[nextNode] && isVisited[nextNode] == isVisited[nowNode]) {
-                vis[nextNode] = true
-                que.offer(nextNode)
-                cnt++
-            }
+            if (vis[nextNode] || isVisited[nextNode] != isVisited[nowNode]) continue
+
+            vis[nextNode] = true
+            que.offer(nextNode)
+            cnt++
         }
     }
 
+    // 그룹이 아니라면 false를 return 그룹이 맞다면 true를 return한다.
     return cnt == group.size
 } // End of BFS
 
