@@ -6,7 +6,7 @@ import java.io.File
 import java.io.OutputStreamWriter
 import java.util.*
 
-// https://www.acmicpc.net/problem/1039
+
 // input
 private lateinit var br: BufferedReader
 
@@ -15,8 +15,6 @@ private var N = 0
 private var K = 0
 private var ans = 0
 private lateinit var memo: Array<BooleanArray>
-
-private data class Pair(var num: Int, var k: Int)
 
 fun main() {
     val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\BOJ_1039\\res.txt"
@@ -32,49 +30,40 @@ fun main() {
 private fun solve(): String {
     val sb = StringBuilder()
 
-    BFS()
+    DFS(N.toString(), 0)
+
     sb.append(ans)
     return sb.toString()
 } // End of solve()
 
-private fun BFS(): Int {
-    val que: Queue<Pair> = LinkedList()
-    que.offer(Pair(N, 0))
-
-    while (que.isNotEmpty()) {
-        val nowNode = que.poll()
-
-        if (nowNode.k == K) {
-            ans = ans.coerceAtLeast(nowNode.num)
-            continue
-        }
-
-        val strNum = nowNode.num.toString()
-        val len = strNum.length
-        for (i in 0 until len - 1) {
-            for (j in i + 1 until len) {
-                if (i == 0 && strNum[j] == '0') continue
-
-                val swapped = swap(strNum, i, j)
-                val swappedNum = swapped.toInt()
-
-                if (memo[swappedNum][nowNode.k + 1]) continue
-                memo[swappedNum][nowNode.k + 1] = true
-                que.offer(Pair(swappedNum, nowNode.k + 1))
-            }
-        }
+private fun DFS(current: String, count: Int) {
+    val currentInt = current.toInt()
+    if (count == K) {
+        ans = ans.coerceAtLeast(currentInt)
+        return
     }
 
-    return ans
-} // End of BFS()
+    if (memo[currentInt][count]) return
+    memo[currentInt][count] = true
+
+    val len = current.length
+    for (i in 0 until len - 1) {
+        for (j in i + 1 until len) {
+            if (i == 0 && current[j] == '0') continue
+
+            val swapped = swap(current, i, j)
+            DFS(swapped, count + 1)
+        }
+    }
+} // End of DFS()
 
 private fun swap(str: String, i: Int, j: Int): String {
-    val arr = str.toCharArray()
-    val temp = arr[i]
-    arr[i] = arr[j]
-    arr[j] = temp
-    return String(arr)
-} // End of swap
+    val chArr = str.toCharArray()
+    val temp = chArr[i]
+    chArr[i] = chArr[j]
+    chArr[j] = temp
+    return String(chArr)
+} // End of swap()
 
 private fun input() {
     StringTokenizer(br.readLine()).run {
