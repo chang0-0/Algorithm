@@ -5,16 +5,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-
 public class BOJ_1039_교환_BFS {
-
-    // https://www.acmicpc.net/problem/1039
     // input
     private static BufferedReader br;
 
     // variables
+    private static final int MAX = 1_000_001;
     private static int N, K;
-    private static boolean[][] memo;
 
     private static class Pair {
         int num;
@@ -45,9 +42,10 @@ public class BOJ_1039_교환_BFS {
     } // End of solve()
 
     private static int BFS() {
+        boolean[][] memo = new boolean[K + 1][MAX];
         Queue<Pair> que = new LinkedList<>();
         que.offer(new Pair(N, 0));
-        memo[N][0] = true;
+        memo[0][N] = true;
         int ans = -1;
 
         String strN = Integer.toString(N);
@@ -70,8 +68,8 @@ public class BOJ_1039_교환_BFS {
                     // 바꾼 숫자가 이미 방문한 경우 통과.
                     int swapNum = swap(nowPair.num, i, j);
 
-                    if (memo[swapNum][nowPair.swapCount + 1]) continue;
-                    memo[swapNum][nowPair.swapCount + 1] = true;
+                    if (memo[nowPair.swapCount + 1][swapNum]) continue;
+                    memo[nowPair.swapCount + 1][swapNum] = true;
                     que.offer(new Pair(swapNum, nowPair.swapCount + 1));
                 }
             }
@@ -92,7 +90,5 @@ public class BOJ_1039_교환_BFS {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
-
-        memo = new boolean[1_000_001][K + 1];
     } // End of input()
 } // End of Main class
