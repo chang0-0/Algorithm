@@ -52,16 +52,16 @@ public class BOJ_3190_뱀 {
 
     private static String solve() {
         StringBuilder sb = new StringBuilder();
-
         int time = 0;
         int directionIdx = 0;
         int direction = 0;
         int headX = 1, headY = 1; // 처음 시작 머리가 있는 곳
+
         Deque<Coordinate> snake = new LinkedList<>();
         snake.offer(new Coordinate(headX, headY));
         map[headX][headY] = 2;
 
-        for (; ; ) {
+        while (true) {
             time++;
 
             int nextX = headX + dirX[direction];
@@ -74,7 +74,7 @@ public class BOJ_3190_뱀 {
                 map[tail.x][tail.y] = 0;
             }
 
-            snake.offer(new Coordinate(nextX, nextY));
+            snake.push(new Coordinate(nextX, nextY));
             map[nextX][nextY] = 2;
 
             headX = nextX;
