@@ -1,4 +1,4 @@
-package BOJ_서강그라운드
+package BOJ_14938
 
 import java.io.BufferedReader
 import java.io.BufferedWriter
@@ -6,15 +6,11 @@ import java.io.File
 import java.io.OutputStreamWriter
 import java.util.*
 
-/*
-    얻을 수 있는 최대 아이템의 개수
- */
-
 // input
 private lateinit var br: BufferedReader
 
 // variables
-private const val INF = Int.MAX_VALUE
+private const val INF = Int.MAX_VALUE / 4
 
 private var N = 0
 private var M = 0
@@ -24,14 +20,14 @@ private var ans = 0
 private lateinit var items: IntArray
 private lateinit var adjList: MutableList<MutableList<Node>>
 
-private data class Node(var num: Int, var weight: Int) : Comparable<Node> { // End of Node class
+private data class Node(var num: Int, var weight: Int) : Comparable<Node> {
     override fun compareTo(other: Node): Int {
         return weight - other.weight
     } // End of weight
 } // End of Node class
 
 fun main() {
-    val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\BOJ_서강그라운드\\res\\14938.txt"
+    val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\BOJ_14938\\res.txt"
     br = BufferedReader(File(path).bufferedReader())
     val bw = BufferedWriter(OutputStreamWriter(System.out))
     val sb = StringBuilder()
@@ -39,7 +35,7 @@ fun main() {
     input()
 
     for (i in 1..N) {
-        ans = Math.max(dijkstra(startNode = i), ans)
+        ans = Math.max(dijkstra(i), ans)
     }
 
     sb.append(ans)
@@ -47,24 +43,25 @@ fun main() {
     bw.close()
 } // End of main
 
-private fun dijkstra(startNode: Int): Int {
+private fun dijkstra(start: Int): Int {
     val pque = PriorityQueue<Node>()
     val dist = IntArray(N + 1) { INF }
     val isVisited = BooleanArray(N + 1) { false }
 
-    pque.offer(Node(startNode, 0))
-    dist[startNode] = 0
+    pque.offer(Node(start, 0))
+    dist[start] = 0
 
     while (pque.isNotEmpty()) {
-        val pollNode = pque.poll()
+        val current = pque.poll()
 
-        if (isVisited[pollNode.num]) continue
-        //isVisited[pollNode.num] = true
+        if (current.weight > dist[current.num]) continue
+        if (isVisited[current.num]) continue
+        isVisited[current.num] = true
 
-        adjList[pollNode.num].forEach { nextNode ->
-            if (!isVisited[pollNode.num] && dist[nextNode.num] > dist[pollNode.num] + nextNode.weight) {
-                pque.offer(Node(nextNode.num, nextNode.weight))
-                dist[nextNode.num] = dist[pollNode.num] + nextNode.weight
+        adjList[current.num].forEach { next ->
+            if (dist[next.num] > dist[current.num] + next.weight) {
+                dist[next.num] = dist[current.num] + next.weight
+                pque.offer(Node(next.num, dist[next.num]))
             }
         }
     }
