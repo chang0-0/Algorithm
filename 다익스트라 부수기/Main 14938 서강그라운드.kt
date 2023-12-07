@@ -6,6 +6,7 @@ import java.io.File
 import java.io.OutputStreamWriter
 import java.util.*
 
+// https://www.acmicpc.net/problem/14938
 // input
 private lateinit var br: BufferedReader
 
