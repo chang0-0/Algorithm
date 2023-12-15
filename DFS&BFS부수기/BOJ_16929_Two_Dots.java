@@ -47,11 +47,6 @@ public class BOJ_16929_Two_Dots {
     } // End of solve()
 
     private static boolean DFS(int x, int y, int preX, int preY, char color) {
-        System.out.println("============================================");
-        for (boolean[] t : isVisited) {
-            System.out.println(Arrays.toString(t));
-        }
-
         // 앞으로만 진행하면서 방문했던 곳을 다시 만나게되면 사이클이 있는 것이다.
         if (isVisited[x][y]) return true;
         isVisited[x][y] = true;
