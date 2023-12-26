@@ -12,7 +12,6 @@ public class BOJ_30823_건공문자열 {
     // variables
     private static int N, K;
     private static String S;
-    private static char[] chArr;
 
     public static void main(String[] args) throws IOException {
         System.setIn(new FileInputStream("C:\\Users\\bigyo\\Desktop\\알고리즘\\JavaAlgorithm\\src\\BOJ_30823\\res.txt"));
@@ -28,11 +27,12 @@ public class BOJ_30823_건공문자열 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i <= N - K; i++) {
-            for (int j = i; j < i + K; j++) {
-
-
-            }
+        K--;
+        if ((N - K) % 2 == 0) {
+            sb.append(S.substring(K)).append(S, 0, K);
+            System.out.println("여기");
+        } else {
+            sb.append(S.substring(K)).append(new StringBuilder(S.substring(0, K)).reverse());
         }
 
         return sb.toString();
@@ -44,7 +44,5 @@ public class BOJ_30823_건공문자열 {
         K = Integer.parseInt(st.nextToken());
 
         S = br.readLine();
-        chArr = S.toCharArray();
-
     } // End of input()
 } // End of Main class
