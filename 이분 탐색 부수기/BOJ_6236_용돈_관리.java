@@ -10,7 +10,7 @@ public class BOJ_6236_용돈_관리 {
     private static BufferedReader br;
 
     // variables
-    private static int N, M, max, min, ans;
+    private static int N, M, max;
     private static int[] arr;
 
     public static void main(String[] args) throws IOException {
@@ -27,8 +27,7 @@ public class BOJ_6236_용돈_관리 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(binarySearch(min, 10_001));
-        System.out.println("ans : " + ans);
+        sb.append(binarySearch(0, max));
         return sb.toString();
     } // End of solve()
 
@@ -46,17 +45,21 @@ public class BOJ_6236_용돈_관리 {
     } // End of binarySearch()
 
     private static boolean check(int referenceAmount) {
-        int withdrawCount = 1;
-        int haveMoney = referenceAmount;
+        int withdrawCount = 0;
+        int nowHaveMoney = 0;
 
         for (int i = 0; i < N; i++) {
             int todayUsedMoney = arr[i];
 
-            if (todayUsedMoney > haveMoney) {
-                haveMoney = referenceAmount;
+            if (todayUsedMoney > referenceAmount) {
+                return false;
+            }
+
+            if (todayUsedMoney > nowHaveMoney) {
+                nowHaveMoney = referenceAmount - todayUsedMoney;
                 withdrawCount++;
             } else {
-                haveMoney -= todayUsedMoney;
+                nowHaveMoney -= todayUsedMoney;
             }
         }
 
@@ -67,15 +70,11 @@ public class BOJ_6236_용돈_관리 {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        max = -1;
-        min = Integer.MAX_VALUE;
-        ans = Integer.MAX_VALUE;
 
         arr = new int[N];
         for (int i = 0; i < N; i++) {
             arr[i] = Integer.parseInt(br.readLine());
-            max = Math.max(arr[i], max);
-            min = Math.min(arr[i], min);
+            max += arr[i];
         }
     } // End of input()
 } // End of Main class
