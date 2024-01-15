@@ -31,11 +31,10 @@ public class BOJ_2018 {
 
     private static int twoPointer() {
         int left = 1, right = 1, sum = 0, ans = 0;
+
         while (right <= N + 1) {
-            if (sum < N) {
-                sum += right++;
-            } else if (sum == N) {
-                ans++;
+            if (sum <= N) {
+                if (sum == N) ans++;
                 sum += right++;
             } else {
                 sum -= left++;
@@ -43,7 +42,7 @@ public class BOJ_2018 {
         }
 
         return ans;
-    } // End of twoPointer()
+    } // End of twoPointer
 
     private static void input() throws IOException {
         N = Integer.parseInt(br.readLine());
