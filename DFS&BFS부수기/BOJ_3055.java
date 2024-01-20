@@ -38,20 +38,9 @@ public class BOJ_3055 {
             this.time = time;
             this.type = type;
         }
-
-        @Override
-        public String toString() {
-            return "Coordinate{" +
-                    "x=" + x +
-                    ", y=" + y +
-                    ", time=" + time +
-                    ", type=" + type +
-                    '}';
-        }
     } // End of Coordinate class
 
     public static void main(String[] args) throws IOException {
-        System.setIn(new FileInputStream("C:\\Users\\bigyo\\Desktop\\알고리즘\\JavaAlgorithm\\src\\BOJ_3055\\res.txt"));
         br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
@@ -94,20 +83,12 @@ public class BOJ_3055 {
             Coordinate current = que.poll();
 
             if (current.x == D.x && current.y == D.y && current.type == 0) {
-
-//                for (char[] t : map) {
-//                    System.out.println(Arrays.toString(t));
-//                }
-
-                //System.out.println("여기옴?");
                 return current.time;
             }
 
             for (int i = 0; i < 4; i++) {
                 int nextX = dirX[i] + current.x;
                 int nextY = dirY[i] + current.y;
-
-                //System.out.println("nextX : " + nextX + ", nextY : " + nextY + ", time : " + current.time + ", type : " + current.type);
 
                 if (current.type == 0 && ableCheck(nextX, nextY, hedgeVisited) && (map[nextX][nextY] == 'D' || map[nextX][nextY] == '.')) {
                     que.offer(new Coordinate(nextX, nextY, current.time + 1, current.type)); // 고슴도치
