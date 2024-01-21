@@ -5,32 +5,55 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Codeforces Round #806 (Div. 4)" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/DFS&amp;BFS부수기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/DFS&amp;BFS부수기" isTestSource="false" packagePrefix="BOJ_16929" />
       <sourceFolder url="file://$MODULE_DIR$/DP 부수기" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Floyd-Warshall 부수기" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Greedy 부수기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Greedy 부수기" isTestSource="false" packagePrefix="BOJ_19621" />
+      <sourceFolder url="file://$MODULE_DIR$/KMP알고리즘" isTestSource="false" packagePrefix="BOJ_30045" />
+      <sourceFolder url="file://$MODULE_DIR$/LCA" isTestSource="false" packagePrefix="BOJ_11437" />
+      <sourceFolder url="file://$MODULE_DIR$/LCS 부수기" isTestSource="false" packagePrefix="BOJ_9251" />
+      <sourceFolder url="file://$MODULE_DIR$/LIS 부수기" isTestSource="false" packagePrefix="BOJ_11053" />
       <sourceFolder url="file://$MODULE_DIR$/Programmers" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Programmers_KAKAO" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SSAFY_Algo_Study" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SW Academy" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Sliding Window 부수기" isTestSource="false" packagePrefix="BOJ_27496" />
       <sourceFolder url="file://$MODULE_DIR$/Solved_ac_CLASS1" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Solved_ac_CLASS2" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Solved_ac_CLASS3" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/UCPC" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/가희와 함께 하는 코딩테스트 4회" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/과목평가" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/다익스트라 부수기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/구글 킥스타트" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/그래프 부수기" isTestSource="false" packagePrefix="BOJ_1039" />
+      <sourceFolder url="file://$MODULE_DIR$/기하학 부수기" isTestSource="false" packagePrefix="기하학_부수기" />
+      <sourceFolder url="file://$MODULE_DIR$/누적 합 부수기" isTestSource="false" packagePrefix="BOJ_11660" />
+      <sourceFolder url="file://$MODULE_DIR$/다익스트라 부수기" isTestSource="false" packagePrefix="BOJ_1261" />
       <sourceFolder url="file://$MODULE_DIR$/대회 부수기" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/문자열 부수기" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/배낭 문제 부수기" isTestSource="false" packagePrefix="BOJ_7579" />
-      <sourceFolder url="file://$MODULE_DIR$/백트래킹 부수기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/두 포인터" isTestSource="false" packagePrefix="BOJ28353" />
+      <sourceFolder url="file://$MODULE_DIR$/문자열 부수기" isTestSource="false" packagePrefix="BOJ_30823" />
+      <sourceFolder url="file://$MODULE_DIR$/배낭 문제 부수기" isTestSource="false" packagePrefix="BOJ_29756" />
+      <sourceFolder url="file://$MODULE_DIR$/백트래킹 부수기" isTestSource="false" packagePrefix="BOJ_30959" />
+      <sourceFolder url="file://$MODULE_DIR$/부르트포스 부수기" isTestSource="false" packagePrefix="BOJ_2503" />
       <sourceFolder url="file://$MODULE_DIR$/분할 정복 부수기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/세그먼트 트리" isTestSource="false" packagePrefix="BOJ_2357" />
+      <sourceFolder url="file://$MODULE_DIR$/수학 부수기" isTestSource="false" packagePrefix="BOJ_30204" />
       <sourceFolder url="file://$MODULE_DIR$/시뮬레이션 부수기" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/싸피 알고 주간" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/이분 탐색 부수기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/애드 혹 부수기" isTestSource="false" packagePrefix="BOJ_20944" />
+      <sourceFolder url="file://$MODULE_DIR$/에이스타 알고리즘" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/오일러 부수기" isTestSource="false" packagePrefix="오일러_경로_부수기" />
+      <sourceFolder url="file://$MODULE_DIR$/유니온 파인드 부수기" isTestSource="false" packagePrefix="BOJ_1717" />
+      <sourceFolder url="file://$MODULE_DIR$/이분 탐색 부수기" isTestSource="false" packagePrefix="BOJ_2512" />
       <sourceFolder url="file://$MODULE_DIR$/일반구현" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/자료구조" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/자료구조 부수기" isTestSource="false" packagePrefix="BOJ_1991" />
+      <sourceFolder url="file://$MODULE_DIR$/정렬 부수기" isTestSource="false" packagePrefix="BOJ_1931" />
       <sourceFolder url="file://$MODULE_DIR$/정수론 &amp; 조합론 부수기" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/중국인의 나머지 정리 부수기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/투 포인터 부수기" isTestSource="false" packagePrefix="BOJ_2018" />
+      <sourceFolder url="file://$MODULE_DIR$/프로그래머스 문제 추천" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/해 구하기" isTestSource="false" packagePrefix="BOJ_2816" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

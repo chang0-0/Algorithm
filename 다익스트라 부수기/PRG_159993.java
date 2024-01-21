@@ -4,8 +4,7 @@ class Solution {
     public static final int INF = Integer.MAX_VALUE;
     public static char[][] map;
     public static int N, M;
-    public static Coordinate S, E;
-    public static List<Coordinate> leverList;
+    public static Coordinate S, E, L;
     public static final int[] dirX = {0, 0, -1, 1};
     public static final int[] dirY = {-1, 1, 0, 0};
      
@@ -32,42 +31,46 @@ class Solution {
         
         input(maps);
         
-        // for(char[] t : map) {
-        //     System.out.println(Arrays.toString(t));
-        // }
+        int[][] dist = BFS(S);
+        if(dist[E.x][E.y] == INF || dist[L.x][L.y] == INF) {
+            return -1;
+        }
         
-        return BFS();
+        int leverDist = dist[L.x][L.y];
+        dist = BFS(L);
+        
+        return leverDist + dist[E.x][E.y];
     } // End of solution()
     
-    public int BFS() {
+    public int[][] BFS(Coordinate start) {
         boolean[][] visited = new boolean[N][M];
         LinkedList<Coordinate> que = new LinkedList<>();
         int[][] dist = new int[N][M];
-        Arrays.fill(dist, INF);
+        for(int i=0; i<N; i++) {
+         Arrays.fill(dist[i], INF);
+        }
         
-        que.offer(new Coordinate(S.x, S.y, 0));
-        visited[S.x][S.y] = true;
-        dist[S.x][S.y] = 0;
+        que.offer(new Coordinate(start.x, start.y, 0));
+        visited[start.x][start.y] = true;
+        dist[start.x][start.y] = 0;
         
         while(!que.isEmpty()) {
             Coordinate current = que.poll();
-            
-            if(map[current.x][current.y] == 'E') {
-                return current.move;
-            }
             
             for(int i=0; i<4; i++) {
                 int nextX = dirX[i] + current.x;
                 int nextY = dirY[i] + current.y;
                 
                 if(!isAble(nextX, nextY, visited)) continue;
-                
-                que.offer(new Coordinate(nextX, nextY, current.move + 1));
-                visited[nextX][nextY] = true;
+                if(dist[nextX][nextY] > dist[current.x][current.y] + 1) {
+                    dist[nextX][nextY] = dist[current.x][current.y] + 1;
+                    que.offer(new Coordinate(nextX, nextY, dist[nextX][nextY]));
+                    visited[nextX][nextY] = true;
+                }
             }
         }
-        
-        return -1;
+    
+        return dist;
     } // End of BFS()
     
     public boolean isAble(int nextX, int nextY, boolean[][] visited) {
@@ -77,7 +80,6 @@ class Solution {
     public void input(String[] maps) {
         N = maps.length;
         M = maps[0].length();
-        leverList = new ArrayList<>();
         
         map = new char[N][M];
         for(int i=0; i<N; i++) {
@@ -87,11 +89,9 @@ class Solution {
                 if(map[i][j] == 'S') {
                     S = new Coordinate(i, j);
                 } else if(map[i][j] == 'L') {
-                    leverList.add(new Coordinate(i, j));
-                    map[i][j] = 'O';
+                    L = new Coordinate(i, j);
                 } else if(map[i][j] == 'E') {       
                     E = new Coordinate(i, j);            
-                    map[i][j] = 'O';
                 }
             }
         }
