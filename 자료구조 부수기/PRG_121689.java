@@ -1,55 +1,34 @@
 import java.util.*;
 
-class Solution {
-	// https://school.programmers.co.kr/learn/courses/15009/lessons/121689
-
-    public static class Order implements Comparable<Order> {
-        int inTime;
-        int outTime;
-        
-        public Order(int inTime, int outTime) {
-            this.inTime = inTime;
-            this.outTime = outTime;
-        }
-        
-        @Override
-        public int compareTo(Order o) {
-            return inTime - o.inTime;
-        }
-    } // End of Order class
+class Solution {    
     
     public int solution(int[] menu, int[] order, int k) {
-        int ans = 0;
-        
-        // 백트래킹은 아니고 완탐, 또는 자료구조 문제?
-        int n = menu.length;
+        // 카페에서 최대 몇명이 머물렀는지 알고 싶다.
         int m = order.length;
-        PriorityQueue<Order> pque = new PriorityQueue<>();
-            int lastOutTime = 0;
-
-        for(int i=0; i<m; i++) {
-            int orderMenu = order[i];
+        int max = 0;
+        int lastOrderEndTime = 0;
+        PriorityQueue<Integer> pque = new PriorityQueue<>();        
+        
+        for(int i=0; i<m; i++) {   
             int nowTime = i * k;
-            
-            // 앞의 주문이 먼저 끝난 후에 다음 주문이 시작된다.
-            while(!pque.isEmpty() && pque.peek().outTime <= nowTime) {
+
+            // 나가는 손님이 먼저 퇴장한 다음 들어오는 손님이 입장한다.
+            while(!pque.isEmpty() && pque.peek() <= nowTime) {
                 pque.poll();
             }
             
-            int outTime = 0;
-            if(!pque.isEmpty()) {
-                outTime = lastOutTime + menu[orderMenu];
+            if(pque.isEmpty()) {
+                // 가장 최근에 주문한 끝나는 시간
+                lastOrderEndTime = nowTime + menu[order[i]];
             } else {
-                outTime = nowTime + menu[orderMenu];
+                lastOrderEndTime += menu[order[i]];
             }
             
-            pque.offer(new Order(nowTime, outTime));
-            ans = Math.max(ans, pque.size());            
-            lastOutTime = outTime;
+            
+            pque.offer(lastOrderEndTime);
+            max = Math.max(max, pque.size());            
         }
         
-        ans = Math.max(ans, pque.size());
-        
-        return ans;
+        return max;
     } // End of solution()
 } // End of Solution class
