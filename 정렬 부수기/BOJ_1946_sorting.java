@@ -1,9 +1,10 @@
 package BOJ_1946;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class BOJ_1946 {
+public class BOJ_1946_sorting {
 
     // https://www.acmicpc.net/problem/1946
     // input
@@ -11,7 +12,7 @@ public class BOJ_1946 {
 
     // variables
     private static int N;
-    private static int[] scores;
+    private static int[][] scores;
 
     public static void main(String[] args) throws IOException {
         System.setIn(new FileInputStream("C:\\Users\\bigyo\\Desktop\\알고리즘\\JavaAlgorithm\\src\\BOJ_1946\\res.txt"));
@@ -31,18 +32,22 @@ public class BOJ_1946 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        int ans = 1; // 1등은 무조건 합격이므로 1명으로 시작
-        int standard = scores[1]; // 서류 1등을 기준으로
+        // 서류 등수를 기준으로 정렬
+        Arrays.sort(scores, (a, b) -> {
+            return a[0] - b[0];
+        });
 
-        for (int i = 2; i <= N; i++) {
-            if (scores[i] < standard) {
-                // 서류 점수 i등 인원이 기준의 면접 점수 보다 작을 경우
-                // 선발할 수 있는 인원
-                // 서류 등수가 낮은 순으로 나오는데, 그 기준에서 면접 등수는 높을 경우 해당 인원은 합격
-                standard = scores[i];
+
+        int ans = 1; // 1등 포함
+        int interviewRank = scores[0][1];
+
+        for (int i = 1; i < N; i++) {
+            if (scores[i][1] < interviewRank) {
                 ans++;
+                interviewRank = scores[i][1];
             }
         }
+
 
         sb.append(ans).append('\n');
         return sb.toString();
@@ -51,14 +56,14 @@ public class BOJ_1946 {
     private static void input() throws IOException {
         N = Integer.parseInt(br.readLine());
 
-        scores = new int[N + 1];
+        scores = new int[N][2];
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            // 두 성적순위가 1 ~ N까지 표시된다고 했으므로 서류 성적 순위를 배열 index로 설정
-            scores[a] = b;
+            scores[i][0] = a;
+            scores[i][1] = b;
         }
     } // End of input()
 } // End of Main class
