@@ -32,6 +32,8 @@ public class BOJ_11060_DP {
         memo[0] = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 1; j <= arr[i]; j++) {
+                if (memo[i] == INF) continue; // 이거 없이 Integer.MAX_VALUE INF 값으로 하면 overflow나서 오답됨 
+
                 if (i + j <= N - 1) {
                     memo[i + j] = Math.min(memo[i] + 1, memo[i + j]);
                 }
@@ -43,8 +45,6 @@ public class BOJ_11060_DP {
         } else {
             sb.append(memo[N - 1]);
         }
-
-        System.out.println(Arrays.toString(memo));
 
         return sb.toString();
     } // End of solve()
