@@ -11,7 +11,7 @@ public class BOJ_11060_DP {
     private static BufferedReader br;
 
     // variables
-    private static final int INF = Integer.MAX_VALUE / 2;
+    private static final int INF = Integer.MAX_VALUE;
     private static int N;
     private static int[] arr, memo;
 
@@ -32,12 +32,9 @@ public class BOJ_11060_DP {
         memo[0] = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 1; j <= arr[i]; j++) {
-                if (i + j >= N - 1) {
-                    memo[N - 1] = Math.min(memo[i] + 1, memo[N - 1]);
-                    continue;
+                if (i + j <= N - 1) {
+                    memo[i + j] = Math.min(memo[i] + 1, memo[i + j]);
                 }
-
-                memo[i + j] = Math.min(memo[i] + 1, memo[i + j]);
             }
         }
 
@@ -47,6 +44,7 @@ public class BOJ_11060_DP {
             sb.append(memo[N - 1]);
         }
 
+        System.out.println(Arrays.toString(memo));
 
         return sb.toString();
     } // End of solve()
@@ -54,7 +52,7 @@ public class BOJ_11060_DP {
     private static void input() throws IOException {
         N = Integer.parseInt(br.readLine());
         arr = new int[N];
-        memo = new int[N + 1];
+        memo = new int[N];
         Arrays.fill(memo, INF);
 
         StringTokenizer st = new StringTokenizer(br.readLine());

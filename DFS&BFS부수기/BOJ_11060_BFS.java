@@ -54,7 +54,7 @@ public class BOJ_11060_BFS {
 
     private static int BFS() {
         LinkedList<Jump> que = new LinkedList<>();
-        int[] memo = new int[N + 1];
+        int[] memo = new int[N];
         Arrays.fill(memo, INF);
         memo[0] = 0;
 
@@ -67,14 +67,11 @@ public class BOJ_11060_BFS {
             Jump current = que.poll();
 
             for (int i = 1; i <= current.go; i++) {
-                if (current.start + i >= N) {
-                    memo[N] = Math.min(memo[N], current.jumpCount + 1);
-                    continue;
-                }
-
-                if (memo[current.start + i] > memo[current.start] + 1) {
-                    memo[current.start + i] = memo[current.start] + 1;
-                    que.offer(new Jump(current.start + i, arr[current.start + i], memo[current.start + i]));
+                if (current.start + i <= N - 1) {
+                    if (memo[current.start + i] > memo[current.start] + 1) {
+                        memo[current.start + i] = memo[current.start] + 1;
+                        que.offer(new Jump(current.start + i, arr[current.start + i], memo[current.start + i]));
+                    }
                 }
             }
         }
