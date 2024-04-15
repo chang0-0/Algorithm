@@ -5,7 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class BOJ_1697 {
+public class BOJ_1697_BFS {
 
     // https://www.acmicpc.net/problem/1697
     // input
@@ -13,16 +13,9 @@ public class BOJ_1697 {
 
     // variables
     private static int N, K;
-
-    private static class Jump {
-        int num;
-        int count;
-
-        public Jump(int num, int count) {
-            this.num = num;
-            this.count = count;
-        }
-    } // End of Jump class
+    private static int[] memo;
+    private static final int[] moves = {1, -1, 2};
+    private static final int MAX = 100000;
 
     public static void main(String[] args) throws IOException {
         System.setIn(new FileInputStream("C:\\Users\\bigyo\\Desktop\\알고리즘\\JavaAlgorithm\\src\\BOJ_1697\\res.txt"));
@@ -38,41 +31,51 @@ public class BOJ_1697 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(BFS());
+        if (N >= K) {
+            sb.append(N - K);
+        } else {
+            memo = new int[MAX + 1];
+            Arrays.fill(memo, -1);
+
+            sb.append(BFS());
+        }
+
         return sb.toString();
     } // End of solve()
 
     private static int BFS() {
-        ArrayDeque<Jump> que = new ArrayDeque<>();
-        int[] memo = new int[K * 2];
-        Arrays.fill(memo, -1);
-
-        que.offer(new Jump(N, 0));
-        // + 1, - 1, * 2로 이동 가능
+        ArrayDeque<Integer> que = new ArrayDeque<>();
+        que.offer(N);
+        memo[N] = 0;
 
         while (!que.isEmpty()) {
-            Jump cur = que.poll();
+            int cur = que.poll();
 
-            if (memo[cur.num] != -1) continue;
-            memo[cur.num] = cur.count;
-            if (cur.num == K) {
-                return cur.count;
+            for (int i = 0; i < 3; i++) {
+                int next = cur;
+
+                if (i == 0) next += moves[i];
+                else if (i == 1) next += moves[i];
+                else next *= moves[i];
+
+                if (next >= 0 && next <= MAX && memo[next] == -1) {
+                    memo[next] = memo[cur] + 1;
+                    if (next == K) {
+                        return memo[next];
+                    }
+                    que.offer(next);
+                }
+
             }
-
-            if(cur.num * 2 <= K * 2) {
-                que.offer(new Jump(cur.num * 2, cur.count + 1));
-            }
-
-            que.offer(new Jump(cur.num + 1, cur.count + 1));
-            que.offer(new Jump(cur.num - 1, cur.count + 1));
         }
 
-        return 0;
+        return memo[K];
     } // End of BFS()
 
     private static void input() throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
+
     } // End of input()
 } // End of Main class
