@@ -2,15 +2,13 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    // https://softeer.ai/practice/6248
     // input
     private static BufferedReader br;
 
     // variables
     private static int N, M, S, T;
-    private static List<List<Integer>> adjList;
-    private static List<List<Integer>> reverseAdjList;
-        
+    private static List<List<Integer>> adjList, reverseAdjList;
+
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -40,7 +38,7 @@ public class Main {
 
         isVisited = new boolean[N + 1];
         boolean[] fromDest = BFS(reverseAdjList, T, S, isVisited);
-        
+
         // S와 T를 제외하고 개수
         int ans = 0;
         for(int i=1; i<=N; i++) {
@@ -48,7 +46,7 @@ public class Main {
 
             if(toStart[i] && toDest[i] && fromStart[i] && fromDest[i]) ans++;
         }
-    
+
 
         sb.append(ans);
         return sb.toString();
@@ -57,7 +55,6 @@ public class Main {
     private static boolean[] BFS(List<List<Integer>> adjList, int start, int dest, boolean[] isVisited) {
         ArrayDeque<Integer> que = new ArrayDeque<>();
 
-        isVisited[start] = true;
         que.offer(start);
 
         while(!que.isEmpty()) {
@@ -72,7 +69,7 @@ public class Main {
 
         return isVisited;
     } // End of BFS()
-    
+
     private static void input() throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
