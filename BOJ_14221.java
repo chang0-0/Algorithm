@@ -45,31 +45,32 @@ public class BOJ_14221 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < P; i++) {
-            dijkstra(candidateHomes[i]);
-        }
+        dijkstra();
 
         sb.append(ans);
         return sb.toString();
     } // End of solve()
 
-    private static void dijkstra(int start) {
+    private static void dijkstra() {
         PriorityQueue<Edge> pque = new PriorityQueue<>();
         int[] dist = new int[N + 1];
         Arrays.fill(dist, INF);
         boolean[] isVisited = new boolean[N + 1];
 
-        pque.offer(new Edge(start, 0));
-        dist[start] = 0;
-        int minDist = INF;
+        for (int i = 0; i < Q; i++) {
+            int num = convs.get(i);
+            pque.offer(new Edge(num, 0));
+            dist[num] = 0;
+        }
 
+        int minDist = INF;
 
         while (!pque.isEmpty()) {
             Edge cur = pque.poll();
 
-            if (convs.contains(cur.num)) {
-                minDist = Math.min(minDist, dist[cur.num]);
-            }
+//            if (convs.contains(cur.num)) {
+//                minDist = Math.min(minDist, dist[cur.num]);
+//            }
 
             if (isVisited[cur.num]) continue;
             if (dist[cur.num] < cur.dist) continue;
@@ -83,10 +84,8 @@ public class BOJ_14221 {
             }
         }
 
-        if (min > minDist) {
-            min = minDist;
-            ans = start;
-        }
+        System.out.println(Arrays.toString(dist));
+
     } // End of dijkstra()
 
     private static void input() throws IOException {
