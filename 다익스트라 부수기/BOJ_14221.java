@@ -11,10 +11,9 @@ public class BOJ_14221 {
 
     // variables
     private static final int INF = Integer.MAX_VALUE;
-    private static int N, M, P, Q, min, ans;
+    private static int N, M, P, Q;
     private static List<List<Edge>> adjList;
-    private static int[] candidateHomes;
-    private static List<Integer> convs;
+    private static int[] candidateHomes, convs;
 
     private static class Edge implements Comparable<Edge> {
         int num;
@@ -45,32 +44,25 @@ public class BOJ_14221 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        dijkstra();
-
-        sb.append(ans);
+        sb.append(dijkstra());
         return sb.toString();
     } // End of solve()
 
-    private static void dijkstra() {
+    private static int dijkstra() {
         PriorityQueue<Edge> pque = new PriorityQueue<>();
         int[] dist = new int[N + 1];
         Arrays.fill(dist, INF);
         boolean[] isVisited = new boolean[N + 1];
 
+        // 편의점 위치들을 한번에 넣고 시작
         for (int i = 0; i < Q; i++) {
-            int num = convs.get(i);
+            int num = convs[i];
             pque.offer(new Edge(num, 0));
             dist[num] = 0;
         }
 
-        int minDist = INF;
-
         while (!pque.isEmpty()) {
             Edge cur = pque.poll();
-
-//            if (convs.contains(cur.num)) {
-//                minDist = Math.min(minDist, dist[cur.num]);
-//            }
 
             if (isVisited[cur.num]) continue;
             if (dist[cur.num] < cur.dist) continue;
@@ -84,15 +76,20 @@ public class BOJ_14221 {
             }
         }
 
-        System.out.println(Arrays.toString(dist));
+        int minIdx = 0;
+        for (int home : candidateHomes) {
+            if (dist[minIdx] > dist[home] || (dist[minIdx] == dist[home] && minIdx > home)) {
+                minIdx = home;
+            }
+        }
 
+        return minIdx;
     } // End of dijkstra()
 
     private static void input() throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        min = INF;
 
         adjList = new ArrayList<>();
         for (int i = 0; i <= N; i++) {
@@ -106,6 +103,7 @@ public class BOJ_14221 {
             int c = Integer.parseInt(st.nextToken());
 
             adjList.get(a).add(new Edge(b, c));
+            adjList.get(b).add(new Edge(a, c));
         }
 
         st = new StringTokenizer(br.readLine());
@@ -113,18 +111,16 @@ public class BOJ_14221 {
         Q = Integer.parseInt(st.nextToken());
 
         candidateHomes = new int[P];
-        // convs = new ArrayList<>();
+        convs = new int[Q];
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < P; i++) {
             candidateHomes[i] = Integer.parseInt(st.nextToken());
         }
 
-        convs = new ArrayList<>();
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < Q; i++) {
-            // convs[i] = Integer.parseInt(st.nextToken());
-            convs.add(Integer.parseInt(st.nextToken()));
+            convs[i] = Integer.parseInt(st.nextToken());
         }
     } // End of input()
 } // End of Main class
