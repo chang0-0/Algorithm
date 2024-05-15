@@ -12,9 +12,8 @@ public class BOJ_14698 {
 
     // variables
     private static int N;
-    private static int[] arr;
     private static final int MOD = (int) Math.pow(10, 9) + 7;
-    private static PriorityQueue<Integer> pque;
+    private static PriorityQueue<Long> pque;
 
     public static void main(String[] args) throws IOException {
         System.setIn(new FileInputStream("C:\\Users\\bigyo\\Desktop\\알고리즘\\JavaAlgorithm\\src\\BOJ_14698\\res.txt"));
@@ -33,45 +32,29 @@ public class BOJ_14698 {
 
     private static String solve() {
         StringBuilder sb = new StringBuilder();
-        
-        /*  
-            한마리의 슬라임으로 만드는데 필요한 최소의 에너지 양을 구하라
-         */
 
-
+        long ans = 1;
         while (pque.size() > 1) {
-            int num1 = pque.poll();
-            int num2 = pque.poll();
+            long num1 = pque.poll();
+            long num2 = pque.poll();
+            long temp = (num1 * num2);
 
-            int temp = (num1 * num2) % MOD;
+            ans *= temp % MOD;
+            ans %= MOD;
             pque.offer(temp);
         }
 
-        System.out.println("pque : " + pque);
-
-
+        sb.append(ans).append('\n');
         return sb.toString();
     } // End of solve()
 
     private static void input() throws IOException {
         N = Integer.parseInt(br.readLine());
-        arr = new int[N];
         pque = new PriorityQueue<>();
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(st.nextToken());
-            pque.offer(arr[i]);
+            pque.offer(Long.parseLong(st.nextToken()));
         }
     } // End of input()
 } // End of Main class
-
-/*
-    14 * 2 = 28
-
-    28  * 3 = 84
-
-    84, 8, 10
-
-
- */
