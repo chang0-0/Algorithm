@@ -14,14 +14,13 @@ public class BOJ_31871 {
     private static long ans;
     private static List<List<Edge>> adjList;
     private static boolean[] isVisited;
-    private static ArrayDeque<Integer> visited;
-    private static Map<Integer, Map<Integer, Long>> edgeMap;
+    private static Map<Integer, Map<Integer, Integer>> edgeMap;
 
     private static class Edge {
         int num;
-        long dist;
+        int dist;
 
-        private Edge(int num, long dist) {
+        private Edge(int num, int dist) {
             this.num = num;
             this.dist = dist;
         }
@@ -41,13 +40,13 @@ public class BOJ_31871 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        DFS(0, 0);
+        DFS(0, 0, 0);
         sb.append(ans);
         return sb.toString();
     } // End of solve()
 
-    private static void DFS(int node, long dist) {
-        if (node == 0 && visited.size() == N + 1) {
+    private static void DFS(int node, int dist, int count) {
+        if (node == 0 && count == N + 1) {
             ans = Math.max(ans, dist);
             return;
         }
@@ -56,10 +55,8 @@ public class BOJ_31871 {
             if (isVisited[next.num]) continue;
 
             isVisited[next.num] = true;
-            visited.offerLast(next.num);
-            DFS(next.num, dist + next.dist);
+            DFS(next.num, dist + next.dist, count + 1);
             isVisited[next.num] = false;
-            visited.pollFirst();
         }
     } // End of DFS()
 
@@ -74,29 +71,29 @@ public class BOJ_31871 {
             adjList.add(new ArrayList<>());
             edgeMap.put(i, new HashMap<>());
         }
-        visited = new ArrayDeque<>();
         isVisited = new boolean[N + 1];
 
         for (int i = 0; i < M; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int u = Integer.parseInt(st.nextToken());
             int v = Integer.parseInt(st.nextToken());
-            long d = Long.parseLong(st.nextToken());
+            int d = Integer.parseInt(st.nextToken());
 
-            if (u == v) continue;
-            Map<Integer, Long> currentMap = edgeMap.get(u);
-            if (currentMap.containsKey(v)) {
-                currentMap.put(v, Math.max(currentMap.get(v), d));
+            if (u == v) continue; // 자신한테로 오는 간선은 제거
+
+            Map<Integer, Integer> curMap = edgeMap.get(u);
+            if (curMap.containsKey(v)) {
+                curMap.put(v, Math.max(curMap.get(v), d));
             } else {
-                currentMap.put(v, d);
+                curMap.put(v, d);
             }
         }
 
         for (int i = 0; i <= N; i++) {
-            Map<Integer, Long> connections = edgeMap.get(i);
+            Map<Integer, Integer> con = edgeMap.get(i);
 
-            for (int key : connections.keySet()) {
-                long d = connections.get(key);
+            for (int key : con.keySet()) {
+                int d = con.get(key);
                 adjList.get(i).add(new Edge(key, d));
             }
         }
