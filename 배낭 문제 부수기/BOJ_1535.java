@@ -30,21 +30,21 @@ public class BOJ_1535 {
         StringBuilder sb = new StringBuilder();
 
         int ret = topDown(N, MAX);
-        // for (int[] t : memo) System.out.println(Arrays.toString(t));
+        for (int[] t : memo) System.out.println(Arrays.toString(t));
 
         sb.append(ret);
         return sb.toString();
     } // End of solve()
 
     private static int topDown(int n, int m) {
-        // System.out.println("topDown(" + n + ", " + m + ")");
+        System.out.println("topDown(" + n + ", " + m + ")");
         if (n <= 0 || m <= 0) return 0;
         else if (memo[n][m] != -1) return memo[n][m];
 
-        if (m - greetings[n][0] > 0) {
+        if (m - greetings[n - 1][0] > 0) {
             // 인사를 할 수 있는 경우
             // 인사를 한다, 인사를 하지 않고 넘어간다. 선택지 2개
-            memo[n][m] = Math.max(topDown(n - 1, m - greetings[n][0]) + greetings[n][1], topDown(n - 1, m));
+            memo[n][m] = Math.max(topDown(n - 1, m - greetings[n - 1][0]) + greetings[n - 1][1], topDown(n - 1, m));
         } else {
             // 인사를 할 수 없는 경우
             memo[n][m] = topDown(n - 1, m);
@@ -56,10 +56,10 @@ public class BOJ_1535 {
     private static void input() throws IOException {
         N = Integer.parseInt(br.readLine());
 
-        greetings = new int[N + 1][2];
+        greetings = new int[N][2];
         StringTokenizer st = new StringTokenizer(br.readLine());
         StringTokenizer st2 = new StringTokenizer(br.readLine());
-        for (int i = 1; i <= N; i++) {
+        for (int i = 0; i < N; i++) {
             greetings[i][0] = Integer.parseInt(st.nextToken()); // 잃는 체력
             greetings[i][1] = Integer.parseInt(st2.nextToken()); // 얻는 기쁨
         }
