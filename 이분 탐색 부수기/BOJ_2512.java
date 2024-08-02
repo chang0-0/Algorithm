@@ -27,45 +27,45 @@ public class BOJ_2512 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        binarySearch(0, max);
-        sb.append(ans);
+        sb.append(binarySearch(0, max));
         return sb.toString();
     } // End of solve()
 
     private static int binarySearch(int low, int high) {
-        if (low > high) {
-            return low;
-        }
+        if (low > high) return high;
+        // 정답이 될 수 있는 최대값 구하기
+        // low = high + 1
 
         int mid = (low + high) / 2;
-        if (check(mid) > M) {
+        int ret = calc(mid);
+
+        if (ret > M) {
             return binarySearch(low, mid - 1);
         } else {
-            ans = Math.max(ans, mid);
             return binarySearch(mid + 1, high);
         }
     } // End of binarySearch()
 
-    private static int check(int cap) {
+    private static int calc(int mid) {
         int sum = 0;
         for (int i = 0; i < N; i++) {
-            sum += Math.min(cap, arr[i]);
-        }
+            sum += Math.min(mid, arr[i]);
 
+            if (sum > M) return sum;
+        }
         return sum;
-    } // End of check()
+    } // End of calc()
 
     private static void input() throws IOException {
         N = Integer.parseInt(br.readLine());
-        ans = -1;
 
         arr = new int[N];
+        max = 1;
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
-            max = Math.max(max, arr[i]);
+            max = Math.max(arr[i], max);
         }
-
         M = Integer.parseInt(br.readLine());
     } // End of input()
 } // End of Main class
