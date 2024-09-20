@@ -1,6 +1,7 @@
 package BOJ_30804;
 
 import java.io.*;
+import java.util.StringTokenizer;
 
 public class BOJ_30804 {
 
@@ -26,52 +27,47 @@ public class BOJ_30804 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
+        int left = 0;
+        int right = 0;
+        int[] nums = new int[10];
+        int count = 0;
+        int ans = 0;
+        int kind = 0;
 
-        int ret = twoPointer();
-
-        sb.append(ret);
-        return sb.toString();
-    } // End of solve()
-
-    private static int twoPointer() {
-        int left = 0, right = 0;
-        int cnt = 0, kind = 0, max = 0; // cnt: 현재 부분 배열의 길이, kind: 과일 종류 수, max: 최대 길이
-        int[] nums = new int[10]; // 과일 종류를 카운트할 배열, 데이터에 따라 크기 조정 필요
-
-
-        // 기본적으로는 right 포인터를 옮기면서 최대값을 찾는다.
         while (right < N) {
-            if (nums[arr[right]] == 0) { // 새로운 과일 종류 발견
+            int num = arr[right];
+            nums[num]++;
+            count++;
+
+            if (nums[num] == 1) {
                 kind++;
             }
 
-            cnt++;
-            nums[arr[right]]++;
-
             while (kind > 2) {
-                if (--nums[arr[left]] == 0) {
+                int temp = arr[left];
+                nums[temp]--;
+
+                if (nums[temp] == 0) {
                     kind--;
                 }
-                // 종류가 2개가 넘어서면 left를 증가시킨다.
-                cnt--;
                 left++;
+                count--;
             }
 
-            max = Math.max(max, cnt); // 최대 길이 갱신
             right++;
+            ans = Math.max(ans, count);
         }
 
-        return max; // 최대 길이 반환
-    } // End of twoPointer()
+        sb.append(ans);
+        return sb.toString();
+    } // End of solve()
 
     private static void input() throws IOException {
         N = Integer.parseInt(br.readLine());
-
         arr = new int[N];
-        String temp = br.readLine();
-
+        StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            arr[i] = temp.charAt(i << 1) - '0';
+            arr[i] = Integer.parseInt(st.nextToken());
         }
     } // End of input()
 } // End of Main class
