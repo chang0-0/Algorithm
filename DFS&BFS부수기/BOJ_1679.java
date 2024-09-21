@@ -1,7 +1,8 @@
 package BOJ_1679;
 
 import java.io.*;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class BOJ_1679 {
@@ -14,15 +15,15 @@ public class BOJ_1679 {
     private static int N, K, max;
     private static int[] arr;
 
-    private static class Game {
+    private static class Number {
         int num;
         int count;
 
-        public Game(int num, int count) {
+        private Number(int num, int count) {
             this.num = num;
             this.count = count;
         }
-    } // End of Game class
+    } // End of Number class
 
     public static void main(String[] args) throws IOException {
         System.setIn(new FileInputStream("C:\\Users\\bigyo\\Desktop\\알고리즘\\JavaAlgorithm\\src\\BOJ_1679\\res.txt"));
@@ -38,13 +39,12 @@ public class BOJ_1679 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-
+        // 누가 몇번째에서 이겼는지 출력하기
+        // 만들 수 없는 수 출력하기
         boolean[] ret = BFS();
         int idx = 1;
         for (; ; ) {
-            if (!ret[idx]) {
-                break;
-            }
+            if (!ret[idx]) break;
             idx++;
         }
 
@@ -58,22 +58,23 @@ public class BOJ_1679 {
     } // End of solve()
 
     private static boolean[] BFS() {
-        LinkedList<Game> que = new LinkedList<>();
+        ArrayDeque<Number> que = new ArrayDeque<>();
         boolean[] isVisited = new boolean[(max * K) + 1];
 
         for (int i = 0; i < N; i++) {
-            que.offer(new Game(arr[i], 1));
+            que.offer(new Number(arr[i], 1));
             isVisited[arr[i]] = true;
         }
 
         while (!que.isEmpty()) {
-            Game current = que.poll();
+            Number cur = que.poll();
+            isVisited[cur.num] = true;
 
-            if (current.count < K) {
+            if (cur.count < K) {
                 for (int next : arr) {
-                    if (isVisited[next + current.num]) continue;
-                    isVisited[next + current.num] = true;
-                    que.offer(new Game(next + current.num, current.count + 1));
+                    if (isVisited[next + cur.num]) continue;
+                    isVisited[next + cur.num] = true;
+                    que.offer(new Number(next + cur.num, cur.count + 1));
                 }
             }
         }
@@ -84,14 +85,12 @@ public class BOJ_1679 {
     private static void input() throws IOException {
         N = Integer.parseInt(br.readLine());
         arr = new int[N];
-        max = -1;
-
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
-            max = Math.max(max, arr[i]);
         }
-
+        Arrays.sort(arr);
+        max = arr[N - 1];
         K = Integer.parseInt(br.readLine());
     } // End of input()
 } // End of Main class
