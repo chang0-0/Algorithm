@@ -11,20 +11,19 @@ public class BOJ_1039 {
     private static BufferedReader br;
 
     // variables
-    private static int N, K, len;
-    private static char[] chArr;
-    private static boolean[][] memo;
+    private static int N, K, ans, Nlen;
+    private static String Nstr;
     private static final int MAX = 1_000_001;
 
-    private static class Swap {
-        String str;
-        int swapCount;
+    private static class Num {
+        String num;
+        int count;
 
-        private Swap(String str, int swapCount) {
-            this.swapCount = swapCount;
-            this.str = str;
+        private Num(String num, int count) {
+            this.num = num;
+            this.count = count;
         }
-    } // End of Swap class
+    } // End of Num class
 
     public static void main(String[] args) throws IOException {
         System.setIn(new FileInputStream("C:\\Users\\bigyo\\Desktop\\알고리즘\\JavaAlgorithm\\src\\BOJ_1039\\res.txt"));
@@ -40,54 +39,54 @@ public class BOJ_1039 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(BFS());
+        BFS();
+        sb.append(ans);
         return sb.toString();
     } // End of solve()
 
-    private static int BFS() {
-        ArrayDeque<Swap> que = new ArrayDeque<>();
-        que.offer(new Swap(new String(chArr), 0));
-        int ans = -1;
+    private static void BFS() {
+        ArrayDeque<Num> que = new ArrayDeque<>();
+        boolean[][] isVisited = new boolean[MAX][K];
+        que.offer(new Num(Nstr, 0));
+        isVisited[N][0] = true;
 
         while (!que.isEmpty()) {
-            Swap cur = que.poll();
+            Num cur = que.poll();
 
-            if (cur.swapCount == K) {
-                ans = Math.max(ans, Integer.parseInt(cur.str));
-                continue;
-            }
+            for (int i = 0; i < Nlen - 1; i++) {
+                for (int j = i + 1; j < Nlen; j++) {
+                    if (i == 0 && cur.num.charAt(j) == '0') continue;
+                    String swapStr = swap(cur.num, i, j);
+                    int swapInt = Integer.parseInt(swapStr);
 
-            for (int i = 0; i < len - 1; i++) {
-                for (int j = i + 1; j < len; j++) {
-                    if (cur.str.charAt(j) == '0' && i == 0) {
+                    if(cur.count + 1 == K) {
+                        ans = Math.max(ans, swapInt);
                         continue;
                     }
 
-                    String temp = swap(cur.str.toCharArray(), i, j);
-                    if (memo[Integer.parseInt(temp)][cur.swapCount + 1]) continue;
-                    que.offer(new Swap(temp, cur.swapCount + 1));
-                    memo[Integer.parseInt(temp)][cur.swapCount + 1] = true;
+                    if (isVisited[swapInt][cur.count + 1]) continue;
+                    isVisited[swapInt][cur.count + 1] = true;
+                    que.offer(new Num(swapStr, cur.count + 1));
                 }
             }
         }
-
-        return ans;
     } // End of BFS()
 
-    private static String swap(char[] ch, int i, int j) {
-        char temp = ch[j];
-        ch[j] = ch[i];
-        ch[i] = temp;
-        return new String(ch);
-    } // End of swap
+    private static String swap(String str, int i, int j) {
+        char[] chArr = str.toCharArray();
+        char ch = chArr[i];
+        chArr[i] = chArr[j];
+        chArr[j] = ch;
+        return new String(chArr);
+    } // End of swap()
 
     private static void input() throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        chArr = st.nextToken().toCharArray();
-        N = Integer.parseInt(new String(chArr));
+        N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
-        len = chArr.length;
-        memo = new boolean[MAX][K + 1];
+        ans = -1;
+
+        Nstr = Integer.toString(N);
+        Nlen = Nstr.length();
     } // End of input()
 } // End of Main class
