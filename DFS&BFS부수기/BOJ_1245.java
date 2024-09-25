@@ -2,7 +2,6 @@ package BOJ_1245;
 
 import java.io.*;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class BOJ_1245 {
