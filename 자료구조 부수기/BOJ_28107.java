@@ -2,7 +2,6 @@ package BOJ_28107;
 
 import java.io.*;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -14,7 +13,6 @@ public class BOJ_28107 {
 
     // variables
     private static int N, M;
-    private static int[] sushiType;
     private static HashMap<Integer, ArrayDeque<Integer>> sushiMap;
 
     public static void main(String[] args) throws IOException {
@@ -28,11 +26,13 @@ public class BOJ_28107 {
         bw.close();
     } // End of main()
 
-    private static String solve() {
+    private static String solve() throws IOException {
         StringBuilder sb = new StringBuilder();
 
         int[] ans = new int[N + 1];
-        for (int temp : sushiType) {
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int j = 0; j < M; j++) {
+            int temp = Integer.parseInt(st.nextToken());
             ArrayDeque<Integer> que = sushiMap.get(temp);
             if (que == null || que.isEmpty()) {
                 continue;
@@ -41,7 +41,6 @@ public class BOJ_28107 {
             int waiter = que.poll();
             ans[waiter]++;
         }
-
 
         for (int j = 1; j <= N; j++) {
             sb.append(ans[j]).append(' ');
@@ -69,7 +68,5 @@ public class BOJ_28107 {
                 sushiMap.get(temp).add(i + 1);
             }
         }
-
-        sushiType = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
     } // End of input()
 } // End of Main class
