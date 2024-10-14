@@ -39,9 +39,10 @@ public class BOJ_1065 {
     } // End of solve()
 
     private static boolean check(int num) {
-        int hundreds = num / 100;
-        int tens = (num / 10) % 10;
-        int units = num % 10;
+        int hundreds = num / 100; // 100의 자리
+        int tens = (num / 10) % 10; // 10의 자리
+        int units = num % 10; // 1의 자리
+
         return (hundreds - tens) == (tens - units);
     } // Enf of check()
 } // End of Main class
