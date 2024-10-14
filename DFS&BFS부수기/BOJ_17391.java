@@ -2,6 +2,7 @@ package BOJ_17391;
 
 import java.io.*;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class BOJ_17391 {
@@ -12,28 +13,21 @@ public class BOJ_17391 {
 
     // variables
     private static int N, M;
-    private static int[][] map;
-
-    private static final int INF = Integer.MAX_VALUE;
-    private static final int[] dirX = {1, 0}; // 하 우
-    private static final int[] dirY = {0, 1}; // 하 우
+    private static int[][] board;
+    private static final int[] dirX = {1, 0};
+    private static final int[] dirY = {0, 1};
 
     private static class Coordinate {
         int x;
         int y;
         int count;
-        int dir;
-        int total;
 
-        private Coordinate(int x, int y, int count, int dir, int total) {
+        private Coordinate(int x, int y, int count) {
             this.x = x;
             this.y = y;
             this.count = count;
-            this.dir = dir;
-            this.total = total;
         }
-    } // End of Coordinate
-
+    } // End of Coordinate class
 
     public static void main(String[] args) throws IOException {
         System.setIn(new FileInputStream("C:\\Users\\bigyo\\Desktop\\알고리즘\\JavaAlgorithm\\src\\BOJ_17391\\res.txt"));
@@ -50,57 +44,39 @@ public class BOJ_17391 {
         StringBuilder sb = new StringBuilder();
 
         int ret = BFS();
-        if (ret == INF) {
-            sb.append(-1);
-        } else {
-            sb.append(ret);
-        }
 
+        sb.append(ret);
         return sb.toString();
     } // End of solve()
 
     private static int BFS() {
         ArrayDeque<Coordinate> que = new ArrayDeque<>();
-        int ans = Integer.MAX_VALUE;
-
-        int[][][] counts = new int[N + 1][M + 1][2];
-        for (int i = 1; i <= N; i++) {
-            for (int j = 1; j <= M; j++) {
-                for (int k = 0; k < 2; k++) {
-                    counts[i][j][k] = INF;
-                }
-            }
+        int[][] memo = new int[N][M];
+        for (int i = 0; i < N; i++) {
+            Arrays.fill(memo[i], Integer.MAX_VALUE / 2);
         }
-
-        for (int i = 0; i < 2; i++) {
-            counts[1][1][i] = 0;
-            que.offer(new Coordinate(1, 1, map[1][1], i, counts[1][1][i]));
-        }
-
-        // 부스터는 모두 사용하지 않아도 된다.
-        // 단 멈추면 기존의 부스터 개수는 초기화 된다.
+        int ans = Integer.MAX_VALUE / 2;
+        que.offer(new Coordinate(0, 0, 0));
+        memo[0][0] = 0;
 
         while (!que.isEmpty()) {
-            Coordinate current = que.poll();
+            Coordinate cur = que.poll();
 
-            if (counts[current.x][current.y][current.dir] < current.total) continue;
-            if (current.x == N && current.y == M) {
-                ans = Math.min(ans, current.total);
+            if (cur.x == N - 1 && cur.y == M - 1) {
+                ans = Math.min(ans, cur.count);
                 continue;
             }
 
-            int nextX = current.x;
-            int nextY = current.y;
-            for (int i = 0; i < current.count; i++) {
-                nextX += dirX[current.dir];
-                nextY += dirY[current.dir];
-
-                if (!isAbleCheck(nextX, nextY)) continue;
-
+            for (int i = 1; i <= board[cur.x][cur.y]; i++) {
                 for (int j = 0; j < 2; j++) {
-                    if (counts[nextX][nextY][j] > counts[current.x][current.y][j] + 1) {
-                        counts[nextX][nextY][j] = counts[current.x][current.y][j] + 1;
-                        que.offer(new Coordinate(nextX, nextY, map[nextX][nextY], j, counts[nextX][nextY][j]));
+                    int nX = cur.x + (dirX[j] * i);
+                    int nY = cur.y + (dirY[j] * i);
+
+                    if (!isAbleCheck(nX, nY)) continue;
+
+                    if (memo[nX][nY] > memo[cur.x][cur.y] + 1) {
+                        memo[nX][nY] = memo[cur.x][cur.y] + 1;
+                        que.offer(new Coordinate(nX, nY, memo[nX][nY]));
                     }
                 }
             }
@@ -109,20 +85,20 @@ public class BOJ_17391 {
         return ans;
     } // End of BFS()
 
-    private static boolean isAbleCheck(int nextX, int nextY) {
-        return nextX >= 1 && nextX <= N && nextY >= 1 && nextY <= M;
-    } // End of isAbleCheck()
+    private static boolean isAbleCheck(int x, int y) {
+        return x >= 0 && x < N && y >= 0 && y < M;
+    } // End of isAbleCheck
 
     private static void input() throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        map = new int[N + 1][M + 1];
-        for (int i = 1; i <= N; i++) {
+        board = new int[N][M];
+        for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 1; j <= M; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
+            for (int j = 0; j < M; j++) {
+                board[i][j] = Integer.parseInt(st.nextToken());
             }
         }
     } // End of input()
