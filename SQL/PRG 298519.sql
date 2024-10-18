@@ -1,0 +1,18 @@
+WITH WITH_RESULT AS ( 
+    SELECT *, 
+        CASE 
+            WHEN LENGTH IS NULL THEN 10
+            WHEN LENGTH <= 10 THEN 10
+        ELSE LENGTH
+        END AS 'ALT_LENGTH' 
+    FROM FISH_INFO
+)
+
+SELECT COUNT(*) AS FISH_COUNT, MAX(LENGTH) AS MAX_LENGTH, FISH_TYPE
+FROM WITH_RESULT
+GROUP BY FISH_TYPE
+HAVING AVG(ALT_LENGTH) >= 33
+ORDER BY FISH_TYPE
+
+-- 10CM를 취급할 수 있는 테이블을 따로 만들어야함
+-- 평균 길이가 33CM이상, 종류별로 분류, 잡은 수, 최대 길이, 물고기의 종류
