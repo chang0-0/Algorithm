@@ -1,97 +1,91 @@
 import java.util.*;
 
 class Solution {
-    public static HashMap<Integer, Integer> indexMap;
-    public static int N, M;
-    public static int[][] map, oilIndexMap;
-    public static boolean[][] isVisited;
-    
-    public static final int[] dirX = {-1, 1, 0, 0}; // 하 상 좌 우
-    public static final int[] dirY = {0, 0, -1, 1}; // 하 상 좌 우
+    private static int N, M;
+    private static int[][] land;
+    private static boolean[][] isVisited;
+    private static final int[] dirX = {-1, 0, 1, 0}; // 상 우 하 좌
+    private static final int[] dirY = {0, 1, 0, -1}; // 상 우 하 좌
     
     
-    public static class Coordinate {
+    private static class Coordinate {
         int x;
         int y;
         
-        public Coordinate(int x, int y) {
+        private Coordinate(int x, int y) {
             this.x = x;
             this.y = y;
         }
     } // End of Coordinate class
     
-    public int solution(int[][] land) {        
-        input(land);
+    public int solution(int[][] land) {
+        int answer = 0;
         
-        int mapIdx = 1;
+        this.land = land;
+        N = land.length;
+        M = land[0].length;
+        isVisited = new boolean[N][M];
+        HashMap<Integer, Integer> landMap = new HashMap<>();
+        int num = 2;
+    
+        
         for(int i=0; i<N; i++) {
-            for(int j=0; j<M; j++) {                
-                if(!isVisited[i][j] && map[i][j] == 1) {
-                    int ret = BFS(i, j, mapIdx);
-                    
-                    indexMap.put(mapIdx++, ret);
+            for(int j=0; j<M; j++) {
+                
+                if(land[i][j] == 1 && !isVisited[i][j]) {
+                    int ret = BFS(i, j, num);
+                    landMap.put(num++, ret);
                 }
             }
         }
         
+        
         int ans = 0;
-        // 세로로 진행
-        for(int y=0; y<M; y++) {
+        for(int i=0; i<M; i++) {
             HashSet<Integer> set = new HashSet<>();
-            for(int x=0; x<N; x++) {
-                if(oilIndexMap[x][y] != 0) {
-                    set.add(oilIndexMap[x][y]);
+            for(int j=0; j<N; j++) {
+                if(land[j][i] >= 2) {
+                    set.add(land[j][i]);
                 }
             }
             
             int sum = 0;
-            for(int idx : set) {
-                sum += indexMap.get(idx);
+            for(int temp : set) {
+                sum += landMap.get(temp);
             }
-            
-            ans = Math.max(ans, sum);
+            ans = Math.max(sum, ans);
         }
         
         
         return ans;
     } // End of solution()
     
-    public int BFS(int x, int y, int mapIdx) {
+    public int BFS(int x, int y, int num) {
         ArrayDeque<Coordinate> que = new ArrayDeque<>();
         que.offer(new Coordinate(x, y));
-        int count = 0;
+        int count = 1;
+        land[x][y] = num;
+        isVisited[x][y] = true;
         
         while(!que.isEmpty()) {
             Coordinate cur = que.poll();
             
-            if(isVisited[cur.x][cur.y]) continue;
-            isVisited[cur.x][cur.y] = true;
-            oilIndexMap[cur.x][cur.y] = mapIdx;
-            count++;
-            
             for(int i=0; i<4; i++) {
-                int nextX = dirX[i] + cur.x;
-                int nextY = dirY[i] + cur.y;
+                int nX = cur.x + dirX[i];
+                int nY = cur.y + dirY[i];
                 
-                if(!isAbleCheck(nextX, nextY)) continue;
-                
-                que.offer(new Coordinate(nextX, nextY));
+                if(!isAbleCheck(nX, nY)) continue;
+                que.offer(new Coordinate(nX, nY));
+                isVisited[nX][nY] = true;
+                land[nX][nY] = num;
+                count++;
             }
         }
         
         return count;
     } // End of BFS()
     
-    public boolean isAbleCheck(int nextX, int nextY) {
-        return nextX >= 0 && nextX < N && nextY >= 0 && nextY < M && map[nextX][nextY] == 1;
+    public boolean isAbleCheck(int nX, int nY) {
+        return nX >= 0 && nX < N && nY >= 0 && nY < M && !isVisited[nX][nY] && land[nX][nY] == 1;
     } // End of isAbleCheck()
-    
-    public void input(int[][] land) {
-        map = land;
-        N = land.length;
-        M = land[0].length;
-        oilIndexMap = new int[N][M];
-        indexMap = new HashMap<>();
-        isVisited = new boolean[N][M];
-    } // End of input()
 } // End of Solution class
