@@ -11,22 +11,8 @@ public class BOJ_31264 {
     private static BufferedReader br;
 
     // variables
-    private static int N, M, A, max;
+    private static int N, M, A;
     private static int[] arr;
-
-    private static class Shot {
-        int count;
-        long nowPower;
-        long nowScore;
-        int startIdx;
-
-        private Shot(int count, long nowScore, long nowPower, int startIdx) {
-            this.count = count;
-            this.nowScore = nowScore;
-            this.startIdx = startIdx;
-            this.nowPower = nowPower;
-        }
-    } // End of Shot class
 
     public static void main(String[] args) throws IOException {
         System.setIn(new FileInputStream("C:\\Users\\bigyo\\Desktop\\알고리즘\\JavaAlgorithm\\src\\BOJ_31264\\res.txt"));
@@ -120,11 +106,9 @@ public class BOJ_31264 {
         A = Integer.parseInt(st.nextToken());
 
         arr = new int[N];
-        max = -1;
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
-            max = Math.max(max, arr[i]);
         }
     } // End of input()
 } // End of Main class
