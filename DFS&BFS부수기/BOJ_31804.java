@@ -1,8 +1,7 @@
 package BOJ_31804;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class BOJ_31804 {
@@ -14,7 +13,7 @@ public class BOJ_31804 {
     // variables
     private static int N, M;
 
-    private static class Magic implements Comparable<Magic> {
+    private static class Magic {
         int score;
         int count;
         boolean chance;
@@ -24,17 +23,6 @@ public class BOJ_31804 {
             this.count = count;
             this.chance = chance;
         }
-
-        @Override
-        public int compareTo(Magic o) {
-            return count - o.count;
-        }
-
-        @Override
-        public String toString() {
-            return "Magic{" + score + ", " + count + ", " + chance + "}";
-        }
-
     } // End of Magic class
 
     public static void main(String[] args) throws IOException {
@@ -56,13 +44,9 @@ public class BOJ_31804 {
     } // End of solve()
 
     private static int BFS() {
-        PriorityQueue<Magic> que = new PriorityQueue<>();
-        int[][] memo = new int[M + 1][2];
-        for (int i = 0; i < M + 1; i++) {
-            Arrays.fill(memo[i], Integer.MAX_VALUE / 4);
-        }
+        ArrayDeque<Magic> que = new ArrayDeque<>();
+        boolean[][] memo = new boolean[M + 1][2];
         que.offer(new Magic(N, 0, false));
-        memo[N][0] = 0;
 
         while (!que.isEmpty()) {
             Magic cur = que.poll();
@@ -71,23 +55,21 @@ public class BOJ_31804 {
             if (cur.score == M) {
                 return cur.count;
             }
-            if (memo[cur.score][cur.chance ? 1 : 0] < cur.count) continue;
+            if (memo[cur.score][cur.chance ? 1 : 0]) continue;
+            memo[cur.score][cur.chance ? 1 : 0] = true;
 
 
-            if (cur.score + 1 <= M && memo[cur.score + 1][cur.chance ? 1 : 0] > memo[cur.score][cur.chance ? 1 : 0] + 1) {
-                memo[cur.score + 1][cur.chance ? 1 : 0] = memo[cur.score][cur.chance ? 1 : 0] + 1;
-                que.offer(new Magic(cur.score + 1, memo[cur.score + 1][cur.chance ? 1 : 0], cur.chance));
+            if (cur.score + 1 <= M) {
+                que.offer(new Magic(cur.score + 1, cur.count + 1, cur.chance));
             }
 
-            if (cur.score * 2 <= M && memo[cur.score * 2][cur.chance ? 1 : 0] > memo[cur.score][cur.chance ? 1 : 0] + 1) {
-                memo[cur.score * 2][cur.chance ? 1 : 0] = memo[cur.score][cur.chance ? 1 : 0] + 1;
-                que.offer(new Magic(cur.score * 2, memo[cur.score * 2][cur.chance ? 1 : 0], cur.chance));
+            if (cur.score * 2 <= M) {
+                que.offer(new Magic(cur.score * 2, cur.count + 1, cur.chance));
             }
 
             // *10 연산 (찬스가 사용되지 않은 경우만)
-            if (cur.score * 10 <= M && !cur.chance && memo[cur.score * 10][1] > cur.count + 1) {
-                memo[cur.score * 10][1] = cur.count + 1;
-                que.offer(new Magic(cur.score * 10, memo[cur.score * 10][1], true));
+            if (cur.score * 10 <= M && !cur.chance) {
+                que.offer(new Magic(cur.score * 10, cur.count + 1, true));
             }
         }
 
