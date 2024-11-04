@@ -1,7 +1,8 @@
 package BOJ_2206;
 
 import java.io.*;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class BOJ_2206 {
@@ -12,21 +13,26 @@ public class BOJ_2206 {
 
     // variables
     private static int N, M;
-    private static int[][] map;
-    private static final int[] dirX = {0, 0, -1, 1};
-    private static final int[] dirY = {-1, 1, 0, 0};
+    private static int[][] board;
+    private static final int[] dirX = {-1, 0, 1, 0};
+    private static final int[] dirY = {0, 1, 0, -1};
 
     private static class Coordinate {
         int x;
         int y;
-        int move;
-        int breakCount;
+        int count;
+        boolean broken;
 
-        private Coordinate(int x, int y, int move, int breakCount) {
+        private Coordinate(int x, int y, int count, boolean broken) {
             this.x = x;
             this.y = y;
-            this.move = move;
-            this.breakCount = breakCount;
+            this.count = count;
+            this.broken = broken;
+        }
+
+        @Override
+        public String toString() {
+            return "Coordinate{" + x + ", " + y + ", " + count + ", " + broken + "}";
         }
     } // End of Coordinate class
 
@@ -44,56 +50,48 @@ public class BOJ_2206 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-
         int ret = BFS();
-        if (ret == -1) {
-            sb.append(-1);
-        } else {
-            sb.append(ret);
-        }
-
+        sb.append(ret == Integer.MAX_VALUE ? -1 : ret);
         return sb.toString();
     } // End of solve()
 
     private static int BFS() {
-        LinkedList<Coordinate> pQue = new LinkedList<>();
-        boolean[][][] visited = new boolean[N + 1][M + 1][2];
+        ArrayDeque<Coordinate> que = new ArrayDeque<>();
+        boolean[][][] isVisited = new boolean[N][M][2];
+        int ans = Integer.MAX_VALUE;
+        que.offer(new Coordinate(0, 0, 1, false));
 
-        pQue.offer(new Coordinate(1, 1, 1, 0));
-        visited[1][1][0] = true;
+        while (!que.isEmpty()) {
+            Coordinate cur = que.poll();
 
-        while (!pQue.isEmpty()) {
-            Coordinate current = pQue.poll();
-
-            if (current.x == N && current.y == M) {
-                return current.move;
+            if (isVisited[cur.x][cur.y][cur.broken ? 0 : 1]) continue;
+            isVisited[cur.x][cur.y][cur.broken ? 0 : 1] = true;
+            if (cur.x == N - 1 && cur.y == M - 1) {
+                ans = Math.min(ans, cur.count);
+                continue;
             }
 
             for (int i = 0; i < 4; i++) {
-                int nextX = current.x + dirX[i];
-                int nextY = current.y + dirY[i];
+                int nX = dirX[i] + cur.x;
+                int nY = dirY[i] + cur.y;
 
-                if (!isAbleCheck(nextX, nextY)) continue;
+                if (!isAbleCheck(nX, nY)) continue;
 
-                if (map[nextX][nextY] == 1 && current.breakCount == 0 && !visited[nextX][nextY][1]) {
-                    visited[nextX][nextY][1] = true;
-                    pQue.offer(new Coordinate(nextX, nextY, current.move + 1, 1));
-
+                if (board[nX][nY] == 0) {
+                    que.offer(new Coordinate(nX, nY, cur.count + 1, cur.broken));
                 }
 
-                if (map[nextX][nextY] == 0 && !visited[nextX][nextY][current.breakCount]) {
-                    visited[nextX][nextY][current.breakCount] = true;
-                    pQue.offer(new Coordinate(nextX, nextY, current.move + 1, current.breakCount));
+                if (board[nX][nY] == 1 && !cur.broken) {
+                    que.offer(new Coordinate(nX, nY, cur.count + 1, true));
                 }
-
             }
         }
 
-        return -1;
+        return ans;
     } // End of BFS()
 
-    private static boolean isAbleCheck(int nextX, int nextY) {
-        return nextX >= 1 && nextX <= N && nextY >= 1 && nextY <= M;
+    private static boolean isAbleCheck(int x, int y) {
+        return x >= 0 && x < N && y >= 0 && y < M;
     } // End of isAbleCheck()
 
     private static void input() throws IOException {
@@ -101,12 +99,11 @@ public class BOJ_2206 {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        map = new int[N + 1][M + 1];
-
-        for (int i = 1; i <= N; i++) {
+        board = new int[N][M];
+        for (int i = 0; i < N; i++) {
             String temp = br.readLine();
-            for (int j = 1; j <= M; j++) {
-                map[i][j] = temp.charAt(j - 1) - '0';
+            for (int j = 0; j < M; j++) {
+                board[i][j] = Character.getNumericValue(temp.charAt(j));
             }
         }
     } // End of input()
