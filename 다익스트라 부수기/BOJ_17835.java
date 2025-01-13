@@ -12,9 +12,8 @@ public class BOJ_17835 {
     // variables
     private static int N, M, K;
     private static List<List<Edge>> adjList;
+    private static int[] interviewRooms;
     private static final long INF = Long.MAX_VALUE;
-    private static long[] dist;
-    private static PriorityQueue<Edge> pque;
 
     private static class Edge implements Comparable<Edge> {
         int num;
@@ -28,6 +27,11 @@ public class BOJ_17835 {
         @Override
         public int compareTo(Edge o) {
             return Long.compare(dist, o.dist);
+        }
+
+        @Override
+        public String toString() {
+            return "Edge{" + num + ", " + dist + "}";
         }
     } // End of Edge class
 
@@ -45,74 +49,74 @@ public class BOJ_17835 {
     private static String solve() {
         StringBuilder sb = new StringBuilder();
 
-        long maxDist = 0;
-        int ansNum = 0;
-
-        dijkstra();
+        long[] ret = BFS();
+        long max = -1;
+        int num = 0;
         for (int i = 1; i <= N; i++) {
-            if (dist[i] == INF || dist[i] == 0) continue;
-
-            if (maxDist < dist[i]) {
-                maxDist = dist[i];
-                ansNum = i;
-            }
-        }
-
-        sb.append(ansNum).append('\n').append(maxDist);
-        return sb.toString();
-    } // End of solve()
-
-    private static long[] dijkstra() {
-        boolean[] isVisited = new boolean[N + 1];
-
-        while (!pque.isEmpty()) {
-            Edge current = pque.poll();
-
-            if (isVisited[current.num]) continue;
-            if (dist[current.num] < current.dist) continue;
-            isVisited[current.num] = true;
-
-            for (Edge next : adjList.get(current.num)) {
-                if (dist[next.num] > dist[current.num] + next.dist) {
-                    dist[next.num] = dist[current.num] + next.dist;
-                    pque.offer(new Edge(next.num, dist[next.num]));
+            if (ret[i] != INF) {
+                if (max < ret[i]) {
+                    max = ret[i];
+                    num = i;
                 }
             }
         }
 
-        return dist;
-    } // End of dijkstra()
+        sb.append(num).append('\n').append(max);
+        return sb.toString();
+    } // End of solve()
+
+    private static long[] BFS() {
+        PriorityQueue<Edge> que = new PriorityQueue<>();
+        long[] dists = new long[N + 1];
+        boolean[] isVisited = new boolean[N + 1];
+        Arrays.fill(dists, INF);
+
+        for (int t : interviewRooms) {
+            que.offer(new Edge(t, 0));
+            dists[t] = 0;
+        }
+
+        while (!que.isEmpty()) {
+            Edge cur = que.poll();
+
+            if (isVisited[cur.num]) continue;
+            if (cur.dist > dists[cur.num]) continue;
+            isVisited[cur.num] = true;
+
+            for (Edge next : adjList.get(cur.num)) {
+                if (dists[next.num] > dists[cur.num] + next.dist) {
+                    dists[next.num] = dists[cur.num] + next.dist;
+                    que.offer(new Edge(next.num, dists[next.num]));
+                }
+            }
+        }
+
+        return dists;
+    } // End of BFS()
 
     private static void input() throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken()); // 도시의 수
-        M = Integer.parseInt(st.nextToken()); // 도로의 수
-        K = Integer.parseInt(st.nextToken()); // 면접장의 수
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
 
         adjList = new ArrayList<>();
         for (int i = 0; i <= N; i++) {
             adjList.add(new ArrayList<>());
         }
-        dist = new long[N + 1];
-        Arrays.fill(dist, INF);
 
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-
             int u = Integer.parseInt(st.nextToken());
             int v = Integer.parseInt(st.nextToken());
-            int c = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
 
-            adjList.get(v).add(new Edge(u, c));
+            adjList.get(v).add(new Edge(u, w));
         }
-
-        pque = new PriorityQueue<>();
-
+        interviewRooms = new int[K];
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < K; i++) {
-            int temp = Integer.parseInt(st.nextToken());
-            dist[temp] = 0;
-            pque.offer(new Edge(temp, 0));
+            interviewRooms[i] = Integer.parseInt(st.nextToken());
         }
     } // End of input()
 } // End of Main class
