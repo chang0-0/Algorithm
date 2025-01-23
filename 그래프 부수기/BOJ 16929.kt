@@ -36,6 +36,7 @@ private fun solve(): String {
 
             if (DFS(i, j, i, j, arr[i][j])) {
                 sb.append("Yes")
+
                 return sb.toString()
             }
         }
@@ -54,7 +55,7 @@ private fun DFS(x: Int, y: Int, preX: Int, preY: Int, color: Char): Boolean {
         val nY = y + dirY[i]
 
         if (!isAbleCheck(nX, nY, color)) continue
-        if (nX == preX && nY == preY) continue
+        if (nX == preX && nY == preY) continue // 이전과 같으면, continue
 
         if (DFS(nX, nY, x, y, color)) {
             return true
