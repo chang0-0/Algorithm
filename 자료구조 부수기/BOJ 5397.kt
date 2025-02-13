@@ -1,6 +1,7 @@
 package BOJ_5397
 
 import java.io.File
+import java.util.LinkedList
 
 // https://www.acmicpc.net/problem/5397
 // input
@@ -28,11 +29,12 @@ private fun solve(): String {
     val sb = StringBuilder()
 
     val N = str.length
-    val que = ArrayDeque<Char>()
+    val que: MutableList<Char> = LinkedList()
     val iter = que.listIterator()
 
     for (i in 0 until N) {
         val ch = str[i]
+
 
         if (ch == '<') {
             if (iter.hasPrevious()) iter.previous()
