@@ -1,6 +1,6 @@
 package BOJ_14248
 
-import java.io.*
+import java.io.File
 import java.util.StringTokenizer
 
 // https://www.acmicpc.net/problem/14248
@@ -11,6 +11,7 @@ private var br = System.`in`.bufferedReader()
 private var N = 0
 private var S = 0
 private lateinit var arr: IntArray
+private lateinit var isVisited: BooleanArray
 
 fun main() {
     val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\BOJ_14248\\res.txt"
@@ -26,50 +27,37 @@ fun main() {
 private fun solve(): String {
     val sb = StringBuilder()
 
-    sb.append(BFS())
+    DFS(S)
+    var ans = 0
+    for (i in 1..N) if (isVisited[i]) ans++
+
+    sb.append(ans)
     return sb.toString()
 } // End of solve()
 
-private fun BFS(): Int {
-    val que = ArrayDeque<Int>()
-    val isVisited = BooleanArray(N + 1)
+private fun DFS(idx: Int) {
+    if (isVisited[idx]) return
+    isVisited[idx] = true
 
-    que.addLast(S)
-    isVisited[S] = true
-
-    while (que.isNotEmpty()) {
-        val cur = que.removeFirst()
-
-        var next = cur + arr[cur]
-        if (next in 1..N && !isVisited[next]) {
-            que.addLast(next)
-            isVisited[next] = true
-        }
-
-        next = cur - arr[cur]
-        if (next in 1..N && !isVisited[next]) {
-            que.addLast(next)
-            isVisited[next] = true
-        }
+    val next = idx + arr[idx]
+    if (next in 1..N) {
+        DFS(next)
     }
 
-    var count = 0
-    for (i in 1..N) {
-        if (isVisited[i]) count++
+    val next2 = idx - arr[idx]
+    if (next2 in 1..N) {
+        DFS(next2)
     }
-
-    return count
-} // End of BFS()
+} // End of DFS()
 
 private fun input() {
     N = br.readLine().toInt()
 
     val st = StringTokenizer(br.readLine())
-    arr = IntArray(N + 1)
-
-    for (i in 1..N) {
-        arr[i] = st.nextToken().toInt()
+    arr = IntArray(N + 1) { idx ->
+        if (idx == 0) 0
+        else st.nextToken().toInt()
     }
-
     S = br.readLine().toInt()
+    isVisited = BooleanArray(N + 1)
 } // End of input()
