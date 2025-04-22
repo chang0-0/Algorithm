@@ -6,10 +6,11 @@ import java.io.*
 // input
 private var br = System.`in`.bufferedReader()
 
+
 fun main() {
     val path = "C:\\Users\\bigyo\\Desktop\\알고리즘\\KotlinAlgo\\src\\main\\kotlin\\BOJ_1464\\res.txt"
-    br = File(path).bufferedReader()
     val bw = System.out.bufferedWriter()
+    br = File(path).bufferedReader()
 
     bw.write(solve())
     bw.close()
@@ -20,23 +21,19 @@ private fun solve(): String {
 
     val S = br.readLine()
     val N = S.length
-
-    val que = ArrayDeque<Char>()
-    que.addLast(S[0])
+    val builder = StringBuilder()
+    builder.append(S[0])
 
     for (i in 1 until N) {
         val cur = S[i]
 
-        if (cur <= que.first()) {
-            que.addFirst(cur)
+        if (builder.toString() + cur > cur + builder.toString()) {
+            builder.insert(0, cur)
         } else {
-            que.addLast(cur)
+            builder.append(cur)
         }
     }
 
-    que.forEach {
-        sb.append(it)
-    }
-
+    sb.append(builder.toString())
     return sb.toString()
 } // End of solve()
