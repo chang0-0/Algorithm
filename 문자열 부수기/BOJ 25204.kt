@@ -16,7 +16,7 @@ fun main() {
     val bw = System.out.bufferedWriter()
 
     var T = br.readLine().toInt()
-    while (T-- > 0) {
+    repeat(T) {
         input()
 
         bw.write(solve())
@@ -30,14 +30,6 @@ private fun solve(): String {
 
     val comp = object : Comparator<String> {
         override fun compare(o1: String, o2: String): Int {
-            if (o2.startsWith(o1)) {
-                return -1
-            }
-
-            if (o1.startsWith(o2)) {
-                return 1
-            }
-
             val o1Len = o1.length
             val o2Len = o2.length
             val minLen = Math.min(o1Len, o2Len)
@@ -45,17 +37,16 @@ private fun solve(): String {
             for (i in 0 until minLen) {
                 if (o1[i] != o2[i]) {
                     if (o1[i] == '-' && o2[i] != '-') {
-                        // 붙임표가 들어간 문자열이 사전순에서 뒤진다
                         return 1
                     } else if (o1[i] != '-' && o2[i] == '-') {
                         return -1
                     }
 
-                    val c1 = Character.toUpperCase(o1[i])
-                    val c2 = Character.toUpperCase(o2[i])
+                    val upper1 = Character.toUpperCase(o1[i])
+                    val upper2 = Character.toUpperCase(o2[i])
 
-                    if (c1 != c2) {
-                        return c1 - c2
+                    if (upper1 != upper2) {
+                        return upper1 - upper2
                     }
 
                     return o1.compareTo(o2)
@@ -66,16 +57,16 @@ private fun solve(): String {
             return o1.compareTo(o2)
         }
     }
-    val pque = PriorityQueue(comp)
 
+    val que = PriorityQueue<String>(comp)
     repeat(N) {
-        val temp = br.readLine()
-        pque.offer(temp)
+        que.offer(br.readLine())
     }
 
-    while (pque.isNotEmpty()) {
-        sb.append(pque.poll()).append('\n')
+    while (que.isNotEmpty()) {
+        sb.append(que.poll()).append('\n')
     }
+
 
     return sb.toString()
 } // End of solve()
